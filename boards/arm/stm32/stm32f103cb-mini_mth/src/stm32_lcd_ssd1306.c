@@ -1,5 +1,5 @@
 /****************************************************************************
- * boards/arm/stm32/stm32f103-minimum/src/stm32_lcd_ssd1306.c
+ * boards/arm/stm32/stm32f103cb-mini_mth/src/stm32_lcd_ssd1306.c
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -41,7 +41,7 @@
  * Pre-processor Definitions
  ****************************************************************************/
 
-#define OLED_I2C_PORT         1 /* OLED display connected to I2C1 */
+#define OLED_I2C_PORT         2 /* OLED display connected to I2C2 */
 
 /****************************************************************************
  * Private Data

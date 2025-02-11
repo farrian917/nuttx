@@ -1,5 +1,5 @@
 /****************************************************************************
- * boards/arm/stm32/stm32f103-minimum/src/stm32_reset.c
+ * boards/arm/stm32/stm32f103cb-mini_mth/src/stm32_reset.c
  *
  * SPDX-License-Identifier: Apache-2.0
  *

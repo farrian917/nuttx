@@ -1,5 +1,5 @@
 /****************************************************************************
- * boards/arm/stm32/stm32f103-minimum/src/stm32_boot.c
+ * boards/arm/stm32/stm32f103cb-minimth/src/stm32_boot.c
  *
  * SPDX-License-Identifier: Apache-2.0
  *

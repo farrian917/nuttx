@@ -41,28 +41,12 @@ else
   CSRCS += stm32_userleds.c
 endif
 
-ifeq ($(CONFIG_ADC),y)
-CSRCS +=  stm32_adc.c
-endif
-
 ifeq ($(CONFIG_DEV_GPIO),y)
   CSRCS += stm32_gpio.c
 endif
 
 ifeq ($(CONFIG_PWM),y)
   CSRCS += stm32_pwm.c
-endif
-
-ifeq ($(CONFIG_SENSORS_HYT271),y)
-  CSRCS += stm32_hyt271.c
-endif
-
-ifeq ($(CONFIG_SENSORS_DS18B20),y)
-  CSRCS += stm32_ds18b20.c
-endif
-
-ifeq ($(CONFIG_RGBLED),y)
-  CSRCS += stm32_rgbled.c
 endif
 
 ifeq ($(CONFIG_MMCSD),y)
@@ -74,7 +58,7 @@ ifeq ($(CONFIG_MTD_W25),y)
 endif
 
 ifeq ($(CONFIG_MTD_AT24XX),y)
-ifeq ($(CONFIG_STM32_I2C1),y)
+ifeq ($(CONFIG_STM32_I2C2),y)
 CSRCS += stm32_at24.c
 endif
 endif
@@ -83,24 +67,8 @@ ifeq ($(CONFIG_CAN_MCP2515),y)
   CSRCS += stm32_mcp2515.c
 endif
 
-ifeq ($(CONFIG_LCD_MAX7219),y)
-  CSRCS += stm32_max7219.c
-endif
-
-ifeq ($(CONFIG_INPUT_NUNCHUCK),y)
-  CSRCS += stm32_nunchuck.c
-endif
-
 ifeq ($(CONFIG_LCD_SSD1306_I2C),y)
 CSRCS += stm32_lcd_ssd1306.c
-endif
-
-ifeq ($(CONFIG_LCD_ST7567),y)
-  CSRCS += stm32_lcd_st7567.c
-endif
-
-ifeq ($(CONFIG_LCD_PCD8544),y)
-  CSRCS += stm32_pcd8544.c
 endif
 
 ifeq ($(CONFIG_USBDEV),y)

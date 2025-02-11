@@ -1,5 +1,5 @@
 /****************************************************************************
- * boards/arm/stm32/stm32f103-minimum/src/stm32_at24.c
+ * boards/arm/stm32/stm32f103cb-mini_mth/src/stm32_at24.c
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -89,7 +89,7 @@ int stm32_at24_automount(int minor)
           return -ENODEV;
         }
 
-#if defined(CONFIG_STM32F103MINIMUM_AT24_FTL)
+#if defined(CONFIG_STM32F103MINIMTH_AT24_FTL)
       /* And use the FTL layer to wrap the MTD driver as a block driver */
 
       finfo("Initialize the FTL layer to create /dev/mtdblock%d\n",
@@ -101,7 +101,7 @@ int stm32_at24_automount(int minor)
           return ret;
         }
 
-#elif defined(CONFIG_STM32F103MINIMUM_AT24_NXFFS)
+#elif defined(CONFIG_STM32F103MINIMTH_AT24_NXFFS)
       /* Initialize to provide NXFFS on the MTD interface */
 
       finfo("Initialize the NXFFS file system\n");

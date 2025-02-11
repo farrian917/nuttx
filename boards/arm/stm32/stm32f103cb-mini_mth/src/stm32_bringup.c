@@ -1,5 +1,5 @@
 /****************************************************************************
- * boards/arm/stm32/stm32f103-minimum/src/stm32_bringup.c
+ * boards/arm/stm32/stm32f103cb-mini_mth/src/stm32_bringup.c
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -64,9 +64,9 @@
 
 #include "stm32f103cb_mini_mth.h"
 
-/* Conditional logic in stm32f103_minimum.h will determine if certain
+/* Conditional logic in stm32f103cb_mini_mth.h will determine if certain
  * features are supported.  Tests for these features need to be made after
- * including stm32f103_minimum.h.
+ * including stm32f103cb_mini_mth.h.
  */
 
 #ifdef HAVE_RTC_DRIVER

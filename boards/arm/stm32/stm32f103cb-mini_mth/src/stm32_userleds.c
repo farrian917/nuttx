@@ -1,5 +1,5 @@
 /****************************************************************************
- * boards/arm/stm32/stm32f103-minimum/src/stm32_userleds.c
+ * boards/arm/stm32/stm32f103cb-mini_mth/src/stm32_userleds.c
  *
  * SPDX-License-Identifier: Apache-2.0
  *
