@@ -1,5 +1,5 @@
 # ##############################################################################
-# boards/arm/stm32/stm32f103-minimum/CMakeLists.txt
+# boards/arm/stm32/stm32f103cb-mini_mth/CMakeLists.txt
 #
 # SPDX-License-Identifier: Apache-2.0
 #
