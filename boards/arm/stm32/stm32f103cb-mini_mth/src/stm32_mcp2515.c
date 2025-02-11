@@ -35,7 +35,7 @@
 
 #include "stm32.h"
 #include "stm32_spi.h"
-#include "stm32f103_minimum.h"
+#include "stm32f103cb_mini_mth.h"
 
 #if defined(CONFIG_SPI) && defined(CONFIG_STM32_SPI1) && \
     defined(CONFIG_CAN_MCP2515)

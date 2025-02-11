@@ -62,7 +62,7 @@
 #include "stm32_mfrc522.h"
 #endif
 
-#include "stm32f103_minimum.h"
+#include "stm32f103cb_mini_mth.h"
 
 /* Conditional logic in stm32f103_minimum.h will determine if certain
  * features are supported.  Tests for these features need to be made after

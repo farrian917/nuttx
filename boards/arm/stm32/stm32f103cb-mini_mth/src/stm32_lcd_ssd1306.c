@@ -33,7 +33,7 @@
 #include <nuttx/lcd/ssd1306.h>
 
 #include "stm32.h"
-#include "stm32f103_minimum.h"
+#include "stm32f103cb_mini_mth.h"
 
 #include "stm32_ssd1306.h"
 

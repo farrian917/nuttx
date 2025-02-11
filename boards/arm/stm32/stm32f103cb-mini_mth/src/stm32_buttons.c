@@ -34,7 +34,7 @@
 #include <arch/board/board.h>
 
 #include "stm32_gpio.h"
-#include "stm32f103_minimum.h"
+#include "stm32f103cb_mini_mth.h"
 
 #if defined(CONFIG_ARCH_BUTTONS)
 

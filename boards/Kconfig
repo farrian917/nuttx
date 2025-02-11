@@ -2564,6 +2564,15 @@ config ARCH_BOARD_STM32F103_MINIMUM
 	---help---
 		A configuration for the STM32F103 Minimum board.
 
+config ARCH_BOARD_STM32F103CB_MINI_MTH
+	bool "STM32F103CBT6 Minimum ARM Development Board"
+	depends on ARCH_CHIP_STM32F103CB
+	select ARCH_HAVE_LEDS
+	select ARCH_HAVE_BUTTONS
+	select ARCH_HAVE_IRQBUTTONS
+	---help---
+		A configuration for the STM32F103 Mini mth board.
+
 config ARCH_BOARD_STM32F411_MINIMUM
 	bool "STM32F411CEU6 Minimum ARM Development Board"
 	depends on ARCH_CHIP_STM32F411CE

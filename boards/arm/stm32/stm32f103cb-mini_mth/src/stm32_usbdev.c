@@ -36,7 +36,7 @@
 
 #include "arm_internal.h"
 #include "stm32.h"
-#include "stm32f103_minimum.h"
+#include "stm32f103cb_mini_mth.h"
 
 /****************************************************************************
  * Public Functions

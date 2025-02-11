@@ -42,7 +42,7 @@
 #include "chip.h"
 #include "arm_internal.h"
 #include "stm32_i2c.h"
-#include "stm32f103_minimum.h"
+#include "stm32f103cb_mini_mth.h"
 
 /****************************************************************************
  * Pre-processor Definitions

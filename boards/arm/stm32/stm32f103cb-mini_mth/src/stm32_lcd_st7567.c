@@ -40,7 +40,7 @@
 #include "arm_internal.h"
 #include "stm32_gpio.h"
 #include "stm32_spi.h"
-#include "stm32f103_minimum.h"
+#include "stm32f103cb_mini_mth.h"
 
 #ifdef CONFIG_NX_LCDDRIVER
 

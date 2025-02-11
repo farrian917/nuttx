@@ -36,7 +36,7 @@
 #include "arm_internal.h"
 #include "chip.h"
 #include "stm32.h"
-#include "stm32f103_minimum.h"
+#include "stm32f103cb_mini_mth.h"
 
 #if defined(CONFIG_STM32_SPI1) || defined(CONFIG_STM32_SPI2)
 

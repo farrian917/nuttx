@@ -41,7 +41,7 @@
 
 #include "stm32_spi.h"
 
-#include "stm32f103_minimum.h"
+#include "stm32f103cb_mini_mth.h"
 
 /****************************************************************************
  * Pre-processor Definitions
