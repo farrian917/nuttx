@@ -100,10 +100,10 @@
  * which includes the board's user LED.
  */
 
-#ifdef CONFIG_STM32F103MINIMTH_V1
+//#ifdef CONFIG_STM32F103MINIMTH_V1
 
 #  define GPIO_LED1         (GPIO_OUTPUT|GPIO_CNF_OUTPP|GPIO_MODE_50MHz|GPIO_OUTPUT_CLEAR|GPIO_PORTC|GPIO_PIN13)
-#endif
+//#endif
 
 /* BUTTONs */
 

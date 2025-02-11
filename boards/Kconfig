@@ -3581,7 +3581,7 @@ config ARCH_BOARD
 	default "stm32f051-discovery"       if ARCH_BOARD_STM32F051_DISCOVERY
 	default "stm32f072-discovery"       if ARCH_BOARD_STM32F072_DISCOVERY
 	default "stm32f103-minimum"         if ARCH_BOARD_STM32F103_MINIMUM
-	default "stm32f103cb-mini_mth"      if ARCH_BOARD_STM32F103CB_MINIMTH
+	default "stm32f103cb-mini_mth"       if ARCH_BOARD_STM32F103CB_MINI_MTH
 	default "stm32f411-minimum"         if ARCH_BOARD_STM32F411_MINIMUM
 	default "stm3210e-eval"             if ARCH_BOARD_STM3210E_EVAL
 	default "stm3220g-eval"             if ARCH_BOARD_STM3220G_EVAL
@@ -4337,7 +4337,7 @@ endif
 if ARCH_BOARD_STM32F103_MINIMUM
 source "boards/arm/stm32/stm32f103-minimum/Kconfig"
 endif
-if ARCH_BOARD_STM32F103CB_MINIMTH
+if ARCH_BOARD_STM32F103CB_MINI_MTH
 source "boards/arm/stm32/stm32f103cb-mini_mth/Kconfig"
 endif
 if ARCH_BOARD_STM32F411_MINIMUM
