@@ -160,6 +160,9 @@
 #define LED_ASSERTION     6  /* LED1 + LED2 */
 #define LED_PANIC         7  /* LED1 / LED2 blinking */
 
+/* The direction pin for RS485 */
+#define GPIO_USART2_RS485_DIR   (GPIO_OUTPUT|GPIO_CNF_OUTPP|GPIO_MODE_50MHz|GPIO_OUTPUT_SET|GPIO_PORTB|GPIO_PIN2)
+
 /* PWM
  *
  * The STM32F103CB-MINI_MTH has no real on-board PWM devices, but the board can
