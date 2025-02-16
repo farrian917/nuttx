@@ -88,8 +88,20 @@ int stm32_bringup(void);
  *   Called to setup USB-related GPIO pins for the Hy-Mini STM32v board.
  *
  ****************************************************************************/
-
+#if defined(CONFIG_USBDEV) && defined(CONFIG_STM32_USB)
 void stm32_usbinitialize(void);
+#endif
+/****************************************************************************
+ * Name: stm32_can_setup
+ *
+ * Description:
+ *  Initialize CAN and register the CAN device
+ *
+ ****************************************************************************/
+
+ #ifdef CONFIG_STM32_CAN_CHARDRIVER
+ int stm32_can_setup(void);
+ #endif
 
 #endif /* __ASSEMBLY__ */
 #endif /* __BOARDS_ARM_STM32_STM32F103_MINIMUM_SRC_STM32F103_MINI_MTH_H */

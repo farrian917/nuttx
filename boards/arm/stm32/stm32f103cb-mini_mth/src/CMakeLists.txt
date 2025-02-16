@@ -33,6 +33,10 @@ if(CONFIG_USBDEV)
   list(APPEND SRCS stm32_usbdev.c)
 endif()
 
+if(CONFIG_CAN)
+  list(APPEND SRCS stm32_can.c)
+endif()
+
 target_sources(board PRIVATE ${SRCS})
 
 set_property(GLOBAL PROPERTY LD_SCRIPT "${NUTTX_BOARD_DIR}/scripts/ld.script")
