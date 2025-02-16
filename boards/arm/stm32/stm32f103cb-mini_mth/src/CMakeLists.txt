@@ -20,7 +20,7 @@
 #
 # ##############################################################################
 
-set(SRCS stm32_boot.c stm32_bringup.c stm32_spi.c)
+set(SRCS stm32_boot.c stm32_bringup.c)
 
 if(CONFIG_BOARDCTL)
   list(APPEND SRCS stm32_appinit.c)
@@ -29,48 +29,8 @@ if(CONFIG_BOARDCTL)
   endif()
 endif()
 
-if(CONFIG_ARCH_BUTTONS)
-  list(APPEND SRCS stm32_buttons.c)
-endif()
-
-if(CONFIG_ARCH_LEDS)
-  list(APPEND SRCS stm32_autoleds.c)
-else()
-  list(APPEND SRCS stm32_userleds.c)
-endif()
-
-if(CONFIG_DEV_GPIO)
-  list(APPEND SRCS stm32_gpio.c)
-endif()
-
-if(CONFIG_PWM)
-  list(APPEND SRCS stm32_pwm.c)
-endif()
-
-if(CONFIG_MMCSD)
-  list(APPEND SRCS stm32_mmcsd.c)
-endif()
-
-if(CONFIG_MTD_AT24XX)
-  if(CONFIG_STM32_I2C2)
-    list(APPEND SRCS stm32_at24.c)
-  endif()
-endif()
-
-if(CONFIG_CAN_MCP2515)
-  list(APPEND SRCS stm32_mcp2515.c)
-endif()
-
-if(CONFIG_LCD_SSD1306_I2C)
-  list(APPEND SRCS stm32_lcd_ssd1306.c)
-endif()
-
 if(CONFIG_USBDEV)
   list(APPEND SRCS stm32_usbdev.c)
-endif()
-
-if(CONFIG_USBMSC)
-  list(APPEND SRCS stm32_usbmsc.c)
 endif()
 
 target_sources(board PRIVATE ${SRCS})

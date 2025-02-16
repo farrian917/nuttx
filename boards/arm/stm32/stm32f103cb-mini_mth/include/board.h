@@ -172,70 +172,8 @@
 #define GPIO_CAN1_TX GPIO_CAN1_TX_0
 #define GPIO_CAN1_RX GPIO_CAN1_RX_0
 
-/* PWM
- *
- * The STM32F103CB-MINI_MTH has no real on-board PWM devices, but the board can
- * be configured to output a pulse train using TIM3 CH3 on PB0.
- *
- * Note: we don't need redefine GPIO_TIM3_CH3OUT because PB0 is not
- * remap pin.
- */
+#define GPIO_I2C2_SCL GPIO_I2C2_SCL_0
+#define GPIO_I2C2_SDA GPIO_I2C2_SDA_0
 
-/* RGB LED
- *
- * R = TIM1 CH1 on PA8 | G = TIM2 CH2 on PA1 | B = TIM4 CH4 on PB9
- *
- * Note: Pin boards: GPIO_TIM1_CH1OUT ; GPIO_TIM2_CH2OUT ; GPIO_TIM4_CH4OUT
- */
-
-#define RGBLED_RPWMTIMER   1
-#define RGBLED_RPWMCHANNEL 1
-#define RGBLED_GPWMTIMER   2
-#define RGBLED_GPWMCHANNEL 2
-#define RGBLED_BPWMTIMER   4
-#define RGBLED_BPWMCHANNEL 4
-
-/* Tone Driver **************************************************************/
-
-#define BOARD_TONE_PWM_TIM         2   /* PWM timer for tone generation  */
-#define BOARD_TONE_ONESHOT_TIM     3   /* Oneshot timer for note timings */
-#define BOARD_TONE_ONESHOT_TIM_RES 10  /* Oneshot timer resolution (us)  */
-
-// /* NRF24L01 Driver **********************************************************/
-
-// /* Chip enable:  PB.1 */
-
-// #define GPIO_NRF24L01_CE  (GPIO_OUTPUT|GPIO_CNF_OUTPP|GPIO_MODE_50MHz|\
-//                            GPIO_OUTPUT_CLEAR|GPIO_PORTB|GPIO_PIN1)
-
-// /* IRQ line:  PA.0 */
-
-// #define GPIO_NRF24L01_IRQ (GPIO_INPUT|GPIO_CNF_INFLOAT|GPIO_PORTA|GPIO_PIN0)
-
-// #define BOARD_NRF24L01_GPIO_CE     GPIO_NRF24L01_CE
-// #define BOARD_NRF24L01_GPIO_IRQ    GPIO_NRF24L01_IRQ
-
-/* HCSR04 driver */
-
-/* Pins config to use with HC-SR04 sensor */
-
-// #define GPIO_HCSR04_INT   (GPIO_INPUT|GPIO_CNF_INFLOAT|GPIO_PORTA|GPIO_PIN0)
-// #define GPIO_HCSR04_TRIG  (GPIO_OUTPUT|GPIO_CNF_OUTPP|GPIO_MODE_50MHz|\
-//                            GPIO_OUTPUT_CLEAR|GPIO_PORTA|GPIO_PIN1)
-
-// #define BOARD_HCSR04_GPIO_INT  GPIO_HCSR04_INT
-// #define BOARD_HCSR04_GPIO_TRIG GPIO_HCSR04_TRIG
-// #define BOARD_HCSR04_FRTIMER   1    /* TIM1 as free running timer */
-
-/* Pin for APDS-9960 sensor */
-
-// #define GPIO_APDS9960_INT (GPIO_INPUT|GPIO_CNF_INFLOAT|GPIO_PORTA|GPIO_PIN0)
-
-// #define BOARD_APDS9960_GPIO_INT GPIO_APDS9960_INT
-
-// /* ZERO CROSS pin definition */
-
-// #define BOARD_ZEROCROSS_GPIO \
-//   (GPIO_INPUT|GPIO_CNF_INFLOAT|GPIO_PORTA|GPIO_PIN0)
 
 #endif /* __BOARDS_ARM_STM32_STM32F103_MINI_MTH_INCLUDE_BOARD_H */
