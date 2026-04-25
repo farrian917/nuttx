@@ -159,7 +159,6 @@
 #define STM32_PLLCFG_PLL3Q   RCC_PLL2DIVR_Q2(20)
 #define STM32_PLLCFG_PLL3R   RCC_PLL2DIVR_R2(20)
 
-FROM HERE!!!!!
 
 /* SYSCLK = PLL1P = 480 MHz
  * CPUCLK = SYSCLK / 1 = 480 MHz
@@ -171,11 +170,11 @@ FROM HERE!!!!!
 
 /* Configure Clock Assignments */
 
-/* AHB clock (HCLK) is SYSCLK/2 (480 MHz max)
+/* AHB clock (HCLK) is SYSCLK/2 (240 MHz max)
  * HCLK1 = HCLK2 = HCLK3 = HCLK4
  */
 
-#define STM32_RCC_D1CFGR_HPRE   RCC_D1CFGR_HPRE_SYSCLKd2        /* HCLK  = SYSCLK / 2 */
+#define STM32_RCC_D1CFGR_HPRE   RCC_D1CFGR_HPRE_SYSCLKd2        /* HCLK  = SYSCLK / 2 = 240MHz*/
 #define STM32_ACLK_FREQUENCY    (STM32_SYSCLK_FREQUENCY / 2)    /* ACLK in D1, HCLK3 in D1 */
 #define STM32_HCLK_FREQUENCY    (STM32_SYSCLK_FREQUENCY / 2)    /* HCLK in D2, HCLK4 in D3 */
 
@@ -200,6 +199,7 @@ FROM HERE!!!!!
 #define STM32_PCLK4_FREQUENCY     (STM32_HCLK_FREQUENCY/2)
 
 /* Timer clock frequencies */
+
 
 /* Timers driven from APB1 will be twice PCLK1 */
 
@@ -238,7 +238,7 @@ FROM HERE!!!!!
 
 #define STM32_RCC_D2CCIP1R_SPI123SRC RCC_D2CCIP1R_SPI123SEL_PLL1
 
-/* SPI45 clock source - APB (PCLK2?) */
+/* SPI45 clock source - APB (PCLK2) */
 
 #define STM32_RCC_D2CCIP1R_SPI45SRC  RCC_D2CCIP1R_SPI45SEL_APB
 
@@ -246,13 +246,14 @@ FROM HERE!!!!!
 
 #define STM32_RCC_D3CCIPR_SPI6SRC    RCC_D3CCIPR_SPI6SEL_PCLK4
 
-/* USB 1 and 2 clock source - HSI48 */
+/* USB 1 and 2 clock source - PLL3 */
 
-#define STM32_RCC_D2CCIP2R_USBSRC    RCC_D2CCIP2R_USBSEL_HSI48
+#define STM32_RCC_D2CCIP2R_USBSRC    RCC_D2CCIP2R_USBSEL_PLL3
 
 /* ADC 1 2 3 clock source - pll2_pclk */
 
 #define STM32_RCC_D3CCIPR_ADCSRC     RCC_D3CCIPR_ADCSEL_PLL2
+
 
 /* FLASH wait states
  *
@@ -293,7 +294,7 @@ FROM HERE!!!!!
 
 /* LED definitions **********************************************************/
 
-/* The board has 1 user LED that could be used this diagnostic LED too.
+/* The board has 6 user serial LED that could be used this diagnostic LED too.
  *
  * If CONFIG_ARCH_LEDS is not defined, then the user can control the LEDs in
  * any way.
@@ -301,6 +302,8 @@ FROM HERE!!!!!
  */
 
 /* LED index values for use with board_userled() */
+
+!!!FROM HERE FOR LEDS ONLY START
 
 #define BOARD_LED1        0
 #define BOARD_NLEDS       1
@@ -335,22 +338,44 @@ FROM HERE!!!!!
  * has halted.
  */
 
+ !!!FROM HERE FOR LEDS ONLY END
+
 /* Button definitions *******************************************************/
 
-/* The WeAct-STM32H743 board has two user buttons */
+/* The mthCoreH743-v1 board has 5 user buttons
+ * PE2 - Button 0
+ * PE5 - Button 1
+ * PE3 - Button 2
+ * PE4 - Button 3
+ * PA10 - Button 3 
+ */
+
+#define BUTTON_KEY1                0
+#define BUTTON_KEY2                1
+#define BUTTON_KEY1                2
+#define BUTTON_KEY2                3
+#define BUTTON_KEY1                4
+#define NUM_BUTTONS                5
+
+#define BUTTON_KEY1_BIT            (1 << BUTTON_KEY1)
+#define BUTTON_KEY2_BIT            (1 << BUTTON_KEY2)
+#define BUTTON_KEY3_BIT            (1 << BUTTON_KEY1)
+#define BUTTON_KEY4_BIT            (1 << BUTTON_KEY2)
+#define BUTTON_KEY5_BIT            (1 << BUTTON_KEY1)
 
 /* Alternate function pin selections ****************************************/
 
 /* USART1 (Serial Console) */
 
-#define GPIO_USART1_RX   (GPIO_USART1_RX_1 | GPIO_SPEED_100MHz)  /* PB15 */
-#define GPIO_USART1_TX   (GPIO_USART1_TX_1 | GPIO_SPEED_100MHz)  /* PB14 */
+#define GPIO_UART8_RX   (GPIO_UART8_RX_2 | GPIO_SPEED_100MHz)  /* PJ9 */
+#define GPIO_UART8_TX   (GPIO_UART8_TX_2 | GPIO_SPEED_100MHz)  /* PJ8 */
+#define GPIO_RS485_DE
 
-/* OTGFS */
+/* USB FS */
 
 #define GPIO_OTGFS_DM  (GPIO_OTGFS_DM_0|GPIO_SPEED_100MHz) /* PA11 */
 #define GPIO_OTGFS_DP  (GPIO_OTGFS_DP_0|GPIO_SPEED_100MHz) /* PA12 */
-#define GPIO_OTGFS_ID  (GPIO_OTGFS_ID_0|GPIO_SPEED_100MHz) /* PA10 */
+#define GPIO_OTGFS_VBUS   /* PA9 */
 
 /****************************************************************************
  * Public Data
