@@ -471,9 +471,9 @@
 #define BOARD_FMC_SDTR1  (FMC_SDTR_TMRD(2) | /* tMRD     = 2CLK */ \
                            FMC_SDTR_TXSR(9) | /* tXSR min = ns */ \
                            FMC_SDTR_TRAS(6) | /* tRAS min = ns */ \
-                           FMC_SDTR_TRC(8) |  /* tRC  min = ns */  \           
+                           FMC_SDTR_TRC(8) |  /* tRC  min = ns */  \
                            FMC_SDTR_TWR(4) |  /* tWR      = ns */ \
-                           FMC_SDTR_TRP(3) |  /* tRP  min = ns */ \                           
+                           FMC_SDTR_TRP(3) |  /* tRP  min = ns */ \
                            FMC_SDTR_TRCD(3)  /* tRCD min = ns */ 
 
 #define BOARD_FMC_SDRAM_REFR_CYCLES  4096
