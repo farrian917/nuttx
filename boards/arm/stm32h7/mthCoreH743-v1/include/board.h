@@ -418,8 +418,6 @@
 #define GPIO_ETH_RMII_TXD1    (GPIO_ETH_RMII_TXD1_2|GPIO_SPEED_100MHz)    /* PG12 */
 #define GPIO_ETH_RMII_TX_EN   (GPIO_ETH_RMII_TX_EN_2|GPIO_SPEED_100MHz)   /* PG11 */
 
-#define GPIO_ETH_NRST (GPIO_OUTPUT | GPIO_PUSHPULL | GPIO_SPEED_2MHz | GPIO_OUTPUT_CLEAR | GPIO_PORTB | GPIO_PIN2) /* PB2 */
-
 /* SDRAM FMC definitions ****************************************************/
 
 /* The following settings correspond to IS42S32800J-6BLI SDRAM
@@ -581,12 +579,6 @@
 #define GPIO_LTDC_R5     (GPIO_LTDC_R5_5 | GPIO_SPEED_100MHz)      /* PJ4 */
 #define GPIO_LTDC_R6     (GPIO_LTDC_R6_3 | GPIO_SPEED_100MHz)      /* PJ5 */
 #define GPIO_LTDC_R7     (GPIO_LTDC_R7_2 | GPIO_SPEED_100MHz)      /* PG6 */
-
-/* LCD additional GPIOs */
-
-#define GPIO_LCD_NRST   (GPIO_OUTPUT | GPIO_PUSHPULL | GPIO_SPEED_2MHz | GPIO_OUTPUT_CLEAR | GPIO_PORTI | GPIO_PIN8) /* PI8 */
-#define GPIO_LCD_EN     (GPIO_OUTPUT | GPIO_PUSHPULL | GPIO_SPEED_2MHz | GPIO_OUTPUT_CLEAR | GPIO_PORTK | GPIO_PIN2) /* PK2 */
-#define GPIO_LCD_BL_PWM (GPIO_TIM2_CH1OUT_1 | GPIO_SPEED_10MHz) /* PA0 TIM2_CH1 */
 
 /* LCD definitions */
 
