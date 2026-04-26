@@ -1,5 +1,5 @@
 /****************************************************************************
- * boards/arm/stm32h7/weact-stm32h743/src/stm32_boot.c
+ * boards/arm/stm32h7/mthCoreH743-v1/src/stm32_boot.c
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -33,7 +33,7 @@
 
 #include "arm_internal.h"
 #include "stm32_start.h"
-#include "weact-stm32h743.h"
+#include "mthCoreH743-v1.h"
 
 /****************************************************************************
  * Public Functions
@@ -52,11 +52,11 @@
 
 void stm32_boardinitialize(void)
 {
-#ifdef CONFIG_ARCH_LEDS
-  /* Configure on-board LEDs if LED support has been selected. */
+// #ifdef CONFIG_ARCH_LEDS
+//   /* Configure on-board LEDs if LED support has been selected. */
 
-  board_autoled_initialize();
-#endif
+//   board_autoled_initialize();
+// #endif
 }
 
 /****************************************************************************

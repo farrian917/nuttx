@@ -1,5 +1,5 @@
 /****************************************************************************
- * boards/arm/stm32h7/weact-stm32h743/src/stm32_ioctl.c
+ * boards/arm/stm32h7/mthCoreH743-v1/src/stm32_ioctl.c
  *
  * SPDX-License-Identifier: Apache-2.0
  *
@@ -32,7 +32,7 @@
 
 #include <nuttx/board.h>
 
-#include "weact-stm32h743.h"
+#include "mthCoreH743-v1.h"
 
 #ifdef CONFIG_BOARDCTL_IOCTL
 
