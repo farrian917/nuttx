@@ -3,6 +3,6 @@
 # see the file kconfig-language.txt in the NuttX tools repository.
 #
 
-if ARCH_BOARD_WEACT_STM32H743
+if ARCH_BOARD_MTHCOREH743_V1
 
-endif # ARCH_BOARD_WEACT_STM32H743
+endif # ARCH_BOARD_MTHCOREH743_V1

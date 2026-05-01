@@ -1,5 +1,5 @@
 # ##############################################################################
-# boards/arm/stm32h7/weact-stm32h743/CMakeLists.txt
+# boards/arm/stm32h7/mthCoreH743-v1/CMakeLists.txt
 #
 # SPDX-License-Identifier: Apache-2.0
 #

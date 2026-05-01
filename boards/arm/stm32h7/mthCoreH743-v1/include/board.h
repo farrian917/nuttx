@@ -331,14 +331,14 @@
 
 /* LED index values for use with board_userled() */
 
-!!!FROM HERE FOR LEDS ONLY START
+//!!!FROM HERE FOR LEDS ONLY START
 
-#define BOARD_LED1        0
-#define BOARD_NLEDS       1
+// #define BOARD_LED1        0
+// #define BOARD_NLEDS       1
 
 /* LED bits for use with board_userled_all() */
 
-#define BOARD_LED1_BIT    (1 << BOARD_LED1)
+// #define BOARD_LED1_BIT    (1 << BOARD_LED1)
 
 /* If CONFIG_ARCH_LEDS is defined, the usage by the board port is defined in
  * include/board.h and src/stm32_leds.c.
@@ -366,7 +366,7 @@
  * has halted.
  */
 
- !!!FROM HERE FOR LEDS ONLY END
+//  !!!FROM HERE FOR LEDS ONLY END
 
 /* I2C3 - Used by INA226 and touch screen */
 
@@ -635,11 +635,14 @@
 
 /* UARTs */
 
+#ifdef CONFIG_UART8_RS485
 /* UART8 by RS485 (Serial Console) */
 
 #define GPIO_UART8_RX   (GPIO_UART8_RX_2 | GPIO_SPEED_100MHz)  /* PJ9 */
 #define GPIO_UART8_TX   (GPIO_UART8_TX_2 | GPIO_SPEED_100MHz)  /* PJ8 */
 #define GPIO_UART8_RS485_DIR  (GPIO_OUTPUT | GPIO_PUSHPULL | GPIO_SPEED_100MHz | GPIO_OUTPUT_CLEAR | GPIO_PORTA | GPIO_PIN4) /* PA4 */
+
+#endif
 
 /* UART7 for ESP32 AT command line */
 

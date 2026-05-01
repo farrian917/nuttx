@@ -32,6 +32,15 @@ if(CONFIG_BOARDCTL)
   list(APPEND SRCS stm32_appinitialize.c)
 endif()
 
+if(CONFIG_STM32H7_SDMMC)
+  list(APPEND SRCS stm32_sdmmc.c)
+endif()
+
+if(CONFIG_FAT_DMAMEMORY)
+  list(APPEND SRCS stm32_dma_alloc.c)
+endif()
+
+
 target_sources(board PRIVATE ${SRCS})
 
 if(NOT CONFIG_BUILD_FLAT)

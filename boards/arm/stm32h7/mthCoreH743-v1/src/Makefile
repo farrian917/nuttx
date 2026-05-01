@@ -22,16 +22,25 @@
 
 include $(TOPDIR)/Make.defs
 
-CSRCS = stm32_boot.c stm32_bringup.c stm32_usb.c stm32_ioctl.c
+CSRCS = stm32_boot.c stm32_bringup.c stm32_ioctl.c
 
-ifeq ($(CONFIG_ARCH_LEDS),y)
-CSRCS += stm32_autoleds.c
-else
-CSRCS += stm32_userleds.c
-endif
+# ifeq ($(CONFIG_ARCH_LEDS),y)
+# CSRCS += stm32_autoleds.c
+# else
+# CSRCS += stm32_userleds.c
+# endif
 
 ifeq ($(CONFIG_BOARDCTL),y)
 CSRCS += stm32_appinitialize.c
 endif
+
+ifeq ($(CONFIG_STM32H7_SDMMC),y)
+CSRCS += stm32_sdmmc.c
+endif
+
+ifeq ($(CONFIG_FAT_DMAMEMORY),y)
+CSRCS += stm32_dma_alloc.c
+endif
+
 
 include $(TOPDIR)/boards/Board.mk

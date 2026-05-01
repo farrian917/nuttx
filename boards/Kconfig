@@ -1816,6 +1816,14 @@ config ARCH_BOARD_LINUM_STM32H753BI
 	---help---
 		The Linum board is based on the STMicro STM32H753BI MCU.
 
+config ARCH_BOARD_MTHCOREH743_V1
+	bool "mthCore (STM32H743XI) board"
+	depends on ARCH_CHIP_STM32H743XI
+	select ARCH_HAVE_LEDS
+	select ARCH_HAVE_BUTTONS
+	---help---
+		The mthCoreH743-v1 is based on the STMicro STM32H743XI MCU.
+
 config ARCH_BOARD_OPENH743I
 	bool "Waveshare OpenH743I board"
 	depends on ARCH_CHIP_STM32H743II
