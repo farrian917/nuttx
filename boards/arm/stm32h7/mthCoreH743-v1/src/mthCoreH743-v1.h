@@ -40,7 +40,7 @@
 
 /* serial LED WS2812 PWM channel */
 
-#define GPIO_LCD_BL_PWM (GPIO_TIM2_CH1OUT_1 | GPIO_SPEED_50MHz) /* PA0 TIM2_CH1 */
+#define GPIO_WS2812_PWM (GPIO_TIM2_CH1OUT_1 | GPIO_SPEED_50MHz) /* PA0 TIM2_CH1 */
 
 /* Check if we can support the RTC driver */
 
