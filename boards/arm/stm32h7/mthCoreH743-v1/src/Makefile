@@ -34,7 +34,7 @@ ifeq ($(CONFIG_BOARDCTL),y)
 CSRCS += stm32_appinitialize.c
 endif
 
-ifeq ($(CONFIG_STM32H7_SDMMC),y)
+ifeq ($(CONFIG_STM32H7_SDMMC1),y)
 CSRCS += stm32_sdmmc.c
 endif
 

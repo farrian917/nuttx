@@ -46,19 +46,19 @@
 
 /* Card detections requires card support and a card detection GPIO */
 
-#define HAVE_NCD   1
-#if !defined(HAVE_SDIO) || !defined(GPIO_SDIO_NCD)
-#  undef HAVE_NCD
-#endif
+// #define HAVE_NCD   1
+// #if !defined(HAVE_SDIO) || !defined(GPIO_SDIO_NCD)
+// #  undef HAVE_NCD
+// #endif
 
 /****************************************************************************
  * Private Data
  ****************************************************************************/
 
 static struct sdio_dev_s *g_sdio_dev;
-#ifdef HAVE_NCD
-static bool g_sd_inserted;
-#endif
+// #ifdef HAVE_NCD
+// static bool g_sd_inserted;
+// #endif
 
 /****************************************************************************
  * Private Functions
@@ -72,21 +72,21 @@ static bool g_sd_inserted;
  *
  ****************************************************************************/
 
-#ifdef HAVE_NCD
-static int stm32_ncd_interrupt(int irq, void *context, void *param)
-{
-  bool present;
+// #ifdef HAVE_NCD
+// static int stm32_ncd_interrupt(int irq, void *context, void *param)
+// {
+//   bool present;
 
-  present = !stm32_gpioread(GPIO_SDIO_NCD);
-  if (present != g_sd_inserted)
-    {
-      sdio_mediachange(g_sdio_dev, present);
-      g_sd_inserted = present;
-    }
+//   present = !stm32_gpioread(GPIO_SDIO_NCD);
+//   if (present != g_sd_inserted)
+//     {
+//       sdio_mediachange(g_sdio_dev, present);
+//       g_sd_inserted = present;
+//     }
 
-  return OK;
-}
-#endif
+//   return OK;
+// }
+// #endif
 
 /****************************************************************************
  * Public Functions
@@ -104,39 +104,21 @@ int stm32_sdio_initialize(void)
 {
   int ret;
 
-  /* Enable the Power Supply */
-
-  // stm32_configgpio(GPIO_SD1_PWR_EN_N);
-  // stm32_gpiowrite(GPIO_SD1_PWR_EN_N, 0);
-
-  // usleep(50000);
-
-#ifdef HAVE_NCD
-  /* Configure the card detect GPIO */
-
-  stm32_configgpio(GPIO_SDIO_NCD);
-
-  /* Register an interrupt handler for the card detect pin */
-
-  stm32_gpiosetevent(GPIO_SDIO_NCD, true, true, true,
-                     stm32_ncd_interrupt, NULL);
-#endif
-
-  /* Mount the SDIO-based MMC/SD block driver */
-
-  /* First, get an instance of the SDIO interface */
+  /* Delay after board power up*/
+  usleep(100000);  
 
   finfo("Initializing SDIO slot %d\n", SDIO_SLOTNO);
 
   g_sdio_dev = sdio_initialize(SDIO_SLOTNO);
   if (!g_sdio_dev)
-    {
-      ferr("ERROR: Failed to initialize SDIO slot %d\n", SDIO_SLOTNO);
-      return -ENODEV;
-    }
+  {
+    ferr("ERROR: Failed to initialize SDIO slot %d\n", SDIO_SLOTNO);
+    return -ENODEV;
+  }
+
+  sdio_mediachange(g_sdio_dev, true);
 
   /* Now bind the SDIO interface to the MMC/SD driver */
-
   finfo("Bind SDIO to the MMC/SD driver, minor=%d\n", SDIO_MINOR);
 
   ret = mmcsd_slotinitialize(SDIO_MINOR, g_sdio_dev);
@@ -147,19 +129,6 @@ int stm32_sdio_initialize(void)
     }
 
   finfo("Successfully bound SDIO to the MMC/SD driver\n");
-
-#ifdef HAVE_NCD
-  /* Use SD card detect pin to check if a card is g_sd_inserted */
-
-  g_sd_inserted = !stm32_gpioread(GPIO_SDIO_NCD);
-  finfo("Card detect : %d\n", g_sd_inserted);
-
-  sdio_mediachange(g_sdio_dev, g_sd_inserted);
-#else
-  /* Assume that the SD card is inserted.  What choice do we have? */
-
-  sdio_mediachange(g_sdio_dev, true);
-#endif
 
   return OK;
 }

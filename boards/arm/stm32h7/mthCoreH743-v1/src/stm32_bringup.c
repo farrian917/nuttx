@@ -67,6 +67,29 @@ int stm32_bringup(void)
 
   UNUSED(ret);
 
+  
+  // stm32_configgpio(GPIO_OUTPUT | GPIO_PUSHPULL | GPIO_SPEED_50MHz | GPIO_OUTPUT_SET | GPIO_PORTC | GPIO_PIN8); /* PG3 */
+
+  // for(int iii = 0; iii < 1000; iii++)
+  // {
+  //  stm32_gpiowrite(GPIO_OUTPUT | GPIO_PUSHPULL | GPIO_SPEED_50MHz | GPIO_OUTPUT_SET | GPIO_PORTC | GPIO_PIN8, 0);
+
+  //   usleep(10000);
+
+  //    stm32_gpiowrite(GPIO_OUTPUT | GPIO_PUSHPULL | GPIO_SPEED_50MHz | GPIO_OUTPUT_SET | GPIO_PORTC | GPIO_PIN8, 1);
+  //     usleep(10000);
+  // }
+
+
+
+  stm32_configgpio(GPIO_SDMMC1_D1_FLOAT);
+  stm32_configgpio(GPIO_SDMMC1_D2_FLOAT);
+  stm32_configgpio(GPIO_SDMMC1_D3_FLOAT);  
+  stm32_configgpio(GPIO_SDMMC1_D4_FLOAT);
+  stm32_configgpio(GPIO_SDMMC1_D5_FLOAT);
+  stm32_configgpio(GPIO_SDMMC1_D6_FLOAT);
+  stm32_configgpio(GPIO_SDMMC1_D7_FLOAT);
+
 #ifdef CONFIG_FS_PROCFS
   /* Mount the procfs file system */
 
@@ -94,6 +117,14 @@ int stm32_bringup(void)
       syslog(LOG_ERR,
              "ERROR: Failed to initialize MMC/SD driver: %d\n", ret);
     }
+
+  // ret = mkfatfs("/dev/mmcsd0", NULL);
+
+  // if (ret < 0)
+  // {
+  //   syslog(LOG_ERR, "ERROR: Failed to make FATFS on drive: %d\n", ret);
+  // }
+
 #endif
 
   return OK;

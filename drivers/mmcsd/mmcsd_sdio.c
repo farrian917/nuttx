@@ -3868,10 +3868,13 @@ static int mmcsd_cardidentify(FAR struct mmcsd_state_s *priv)
   clock_t start;
   clock_t elapsed;
   int ret;
+  int try_count = 1000;
 
   finfo("Identifying card...\n");
 
   /* Assume failure to identify the card */
+
+
 
   priv->type = MMCSD_CARDTYPE_UNKNOWN;
 
@@ -3912,8 +3915,21 @@ static int mmcsd_cardidentify(FAR struct mmcsd_state_s *priv)
    * then the card is definitely of MMC type
    */
 
-  mmcsd_sendcmdpoll(priv, MMC_CMD1, MMCSD_VDD_33_34 | mmccapacity);
-  ret = SDIO_RECVR3(priv->dev, MMC_CMD1, &response);
+  do
+  {
+    response = 0;
+
+    if(try_count == 0)
+    {
+      return -EIO;
+    }
+
+    mmcsd_sendcmdpoll(priv, MMC_CMD1, MMCSD_VDD_33_34 | mmccapacity);
+    ret = SDIO_RECVR3(priv->dev, MMC_CMD1, &response);
+    finfo("MMC_CMD1 response = %d, try = %d\n", response, (1000 - try_count)); 
+    try_count--;
+    MMCSD_USLEEP(MMCSD_IDLE_DELAY);
+  } while ((response & MMCSD_CARD_BUSY) == 0);
 
   /* Was the operating range set successfully */
 
@@ -4451,6 +4467,10 @@ static int mmcsd_hwinitialize(FAR struct mmcsd_state_s *priv)
 
   priv->caps = SDIO_CAPABILITIES(priv->dev);
   finfo("DMA supported: %d\n", (priv->caps & SDIO_CAPS_DMASUPPORTED) != 0);
+  finfo("BUS8 supported: %d\n", (priv->caps & SDIO_CAPS_8BIT) != 0);
+  finfo("BUS4 supported: %d\n", (priv->caps & SDIO_CAPS_4BIT) != 0);
+  finfo("BUS4ONLY supported: %d\n", (priv->caps & SDIO_CAPS_4BIT_ONLY) != 0);
+  finfo("BUS1ONLY supported: %d\n", (priv->caps & SDIO_CAPS_1BIT_ONLY) != 0);
 
   /* Attach and prepare MMC/SD interrupts */
 

@@ -124,7 +124,7 @@
  *   PLL2R = PLL2_VCO/4  = 800 MHz / 4   = 200 MHz
  */
 #define STM32_PLLCFG_PLL2CFG (RCC_PLLCFGR_PLL2VCOSEL_WIDE | \
-                              RCC_PLLCFGR_PLL2RGE_4_8_MHZ | \
+                              RCC_PLLCFGR_PLL1RGE_4_8_MHZ | \
                               RCC_PLLCFGR_DIVP2EN | \
                               RCC_PLLCFGR_DIVQ2EN | \
                               RCC_PLLCFGR_DIVR2EN )
@@ -143,7 +143,7 @@
 /* PLL3 */
 
 #define STM32_PLLCFG_PLL3CFG (RCC_PLLCFGR_PLL3VCOSEL_WIDE | \
-                              RCC_PLLCFGR_PLL3RGE_4_8_MHZ | \
+                              RCC_PLLCFGR_PLL1RGE_4_8_MHZ | \
                               RCC_PLLCFGR_DIVP3EN | \
                               RCC_PLLCFGR_DIVQ3EN | \
                               RCC_PLLCFGR_DIVR3EN )
@@ -228,31 +228,31 @@
 
 /* I2C123 clock source - HSI */
 
-#define STM32_RCC_D2CCIP2R_I2C123SRC RCC_D2CCIP2R_I2C123SEL_HSI
+// #define STM32_RCC_D2CCIP2R_I2C123SRC RCC_D2CCIP2R_I2C123SEL_HSI
 
 /* I2C4 clock source - HSI */
 
-#define STM32_RCC_D3CCIPR_I2C4SRC    RCC_D3CCIPR_I2C4SEL_HSI
+// #define STM32_RCC_D3CCIPR_I2C4SRC    RCC_D3CCIPR_I2C4SEL_HSI
 
 /* SPI123 clock source - PLL1Q */
 
-#define STM32_RCC_D2CCIP1R_SPI123SRC RCC_D2CCIP1R_SPI123SEL_PLL1
+// #define STM32_RCC_D2CCIP1R_SPI123SRC RCC_D2CCIP1R_SPI123SEL_PLL1
 
 /* SPI45 clock source - APB (PCLK2) */
 
-#define STM32_RCC_D2CCIP1R_SPI45SRC  RCC_D2CCIP1R_SPI45SEL_APB
+// #define STM32_RCC_D2CCIP1R_SPI45SRC  RCC_D2CCIP1R_SPI45SEL_APB
 
 /* SPI6 clock source - APB (PCLK4) */
 
-#define STM32_RCC_D3CCIPR_SPI6SRC    RCC_D3CCIPR_SPI6SEL_PCLK4
+// #define STM32_RCC_D3CCIPR_SPI6SRC    RCC_D3CCIPR_SPI6SEL_PCLK4
 
 /* USB 1 and 2 clock source - PLL3 */
 
-#define STM32_RCC_D2CCIP2R_USBSRC    RCC_D2CCIP2R_USBSEL_PLL3
+// #define STM32_RCC_D2CCIP2R_USBSRC    RCC_D2CCIP2R_USBSEL_PLL3
 
 /* ADC 1 2 3 clock source - pll2_pclk */
 
-#define STM32_RCC_D3CCIPR_ADCSRC     RCC_D3CCIPR_ADCSEL_PLL2
+// #define STM32_RCC_D3CCIPR_ADCSRC     RCC_D3CCIPR_ADCSEL_PLL2
 
 /* SDMMC 1 2 clock source, use STM32_PLL1Q_FREQUENCY  */
 
@@ -262,7 +262,7 @@
 #define BOARD_FMC_CLK               RCC_D1CCIPR_FMCSEL_HCLK
 
 /* Select HCLK to source clock of QSPI */
-#define BOARD_QSPI_CLK  RCC_D1CCIPR_QSPISEL_HCLK
+// #define BOARD_QSPI_CLK  RCC_D1CCIPR_QSPISEL_HCLK
 
 
 /* FLASH wait states
@@ -300,7 +300,7 @@
 #define STM32_SDMMC_MMCXFR_CLKDIV   (5 << STM32_SDMMC_CLKCR_CLKDIV_SHIFT)
 #define STM32_SDMMC_SDXFR_CLKDIV    (5 << STM32_SDMMC_CLKCR_CLKDIV_SHIFT)
 
-#define STM32_SDMMC_CLKCR_EDGE      STM32_SDMMC_CLKCR_NEGEDGE
+#define STM32_SDMMC_CLKCR_EDGE      STM32_CLKCR_RISINGEDGE
 
 #define GPIO_SDMMC2_CK   (GPIO_SDMMC2_CK_1|GPIO_SPEED_100MHz)  /* PD6 */
 #define GPIO_SDMMC2_CMD  (GPIO_SDMMC2_CMD_1|GPIO_SPEED_100MHz) /* PD7 */
@@ -309,16 +309,25 @@
 #define GPIO_SDMMC2_D2   (GPIO_SDMMC2_D2_2|GPIO_SPEED_100MHz)  /* PB3 */
 #define GPIO_SDMMC2_D3   (GPIO_SDMMC2_D3_0|GPIO_SPEED_100MHz)  /* PB4 */
 
-#define GPIO_SDMMC1_CK   (GPIO_SDMMC1_CK_0|GPIO_SPEED_100MHz)  /* PC12 */
-#define GPIO_SDMMC1_CMD  (GPIO_SDMMC1_CMD_0|GPIO_SPEED_100MHz) /* PD2 */
-#define GPIO_SDMMC1_D0   (GPIO_SDMMC1_D0_0|GPIO_SPEED_100MHz)  /* PC8 */
-#define GPIO_SDMMC1_D1   (GPIO_SDMMC1_D1_0|GPIO_SPEED_100MHz)  /* PC9 */
-#define GPIO_SDMMC1_D2   (GPIO_SDMMC1_D2_0|GPIO_SPEED_100MHz)  /* PC10 */
-#define GPIO_SDMMC1_D3   (GPIO_SDMMC1_D3_0|GPIO_SPEED_100MHz)  /* PC11 */
-#define GPIO_SDMMC1_D4   (GPIO_SDMMC1_D4_0|GPIO_SPEED_100MHz)  /* PB8 */
-#define GPIO_SDMMC1_D5   (GPIO_SDMMC1_D5_0|GPIO_SPEED_100MHz)  /* PB9 */
-#define GPIO_SDMMC1_D6   (GPIO_SDMMC1_D6_0|GPIO_SPEED_100MHz)  /* PC6 */
-#define GPIO_SDMMC1_D7   (GPIO_SDMMC1_D7_0|GPIO_SPEED_100MHz)  /* PC7 */
+#define GPIO_SDMMC1_CK   (GPIO_SDMMC1_CK_0|GPIO_SPEED_50MHz)  /* PC12 */
+#define GPIO_SDMMC1_CMD  (GPIO_SDMMC1_CMD_0|GPIO_SPEED_50MHz) /* PD2 */
+#define GPIO_SDMMC1_D0   (GPIO_SDMMC1_D0_0|GPIO_SPEED_50MHz)  /* PC8 */
+// #define GPIO_SDMMC1_D1   (GPIO_SDMMC1_D1_0)  /* PC9 */
+// #define GPIO_SDMMC1_D2   (GPIO_SDMMC1_D2_0)  /* PC10 */
+// #define GPIO_SDMMC1_D3   (GPIO_SDMMC1_D3_0)  /* PC11 */
+// #define GPIO_SDMMC1_D4   (GPIO_SDMMC1_D4_0)  /* PB8 */
+// #define GPIO_SDMMC1_D5   (GPIO_SDMMC1_D5_0)  /* PB9 */
+// #define GPIO_SDMMC1_D6   (GPIO_SDMMC1_D6_0)  /* PC6 */
+// #define GPIO_SDMMC1_D7   (GPIO_SDMMC1_D7_0)  /* PC7 */
+
+
+#define GPIO_SDMMC1_D1_FLOAT      (GPIO_INPUT | GPIO_PULLDOWN | GPIO_PORTC | GPIO_PIN9)
+#define GPIO_SDMMC1_D2_FLOAT      (GPIO_INPUT | GPIO_PULLDOWN | GPIO_PORTC | GPIO_PIN10)
+#define GPIO_SDMMC1_D3_FLOAT      (GPIO_INPUT | GPIO_PULLDOWN | GPIO_PORTC | GPIO_PIN11)
+#define GPIO_SDMMC1_D4_FLOAT      (GPIO_INPUT | GPIO_PULLDOWN | GPIO_PORTB | GPIO_PIN8)
+#define GPIO_SDMMC1_D5_FLOAT      (GPIO_INPUT | GPIO_PULLDOWN | GPIO_PORTB | GPIO_PIN9)
+#define GPIO_SDMMC1_D6_FLOAT      (GPIO_INPUT | GPIO_PULLDOWN | GPIO_PORTC | GPIO_PIN6)
+#define GPIO_SDMMC1_D7_FLOAT      (GPIO_INPUT | GPIO_PULLDOWN | GPIO_PORTC | GPIO_PIN7)
 
 /* LED definitions **********************************************************/
 
@@ -438,7 +447,7 @@
  * this value will need to be doubled.
  */
 
-#  define BOARD_SDRAM1_SIZE        (32*1024*1024) /*32MB*/
+#define BOARD_SDRAM1_SIZE        (32*1024*1024) /*32MB*/
 
 
 /* BOARD_FMC_SDCR1 - Initial value for SDRAM control registers for SDRAM
@@ -472,15 +481,15 @@
                            FMC_SDTR_TRC(8) |  /* tRC  min = ns */  \
                            FMC_SDTR_TWR(4) |  /* tWR      = ns */ \
                            FMC_SDTR_TRP(3) |  /* tRP  min = ns */ \
-                           FMC_SDTR_TRCD(3)  /* tRCD min = ns */ 
+                           FMC_SDTR_TRCD(3)  /* tRCD min = ns */ )
 
 #define BOARD_FMC_SDRAM_REFR_CYCLES  4096
 #define BOARD_FMC_SDRAM_REFR_PERIOD  64
 #define BOARD_FMC_SDRAM_AUTOREFRESH  8
-#define BOARD_FMC_SDRAM_MODE         (FMC_SDCMR_MRD_BURST_LENGTH_8| \
-                                      FMC_SDCMR_MRD_BURST_TYPE_SEQUENTIAL| \
-                                      FMC_SDCMR_MRD_CAS_LATENCY_3| \
-                                      FMC_SDCMR_MRD_OPERATING_MODE_STANDARD |\
+#define BOARD_FMC_SDRAM_MODE         (FMC_SDCMR_MRD_BURST_LENGTH_8 | \
+                                      FMC_SDCMR_MRD_BURST_TYPE_SEQUENTIAL | \
+                                      FMC_SDCMR_MRD_CAS_LATENCY_3 | \
+                                      FMC_SDCMR_MRD_OPERATING_MODE_STANDARD | \
                                       FMC_SDCMR_MRD_WRITEBURST_MODE_PROGRAMMED)
 
 #define BOARD_FMC_GPIO_CONFIGS \
