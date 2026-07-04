@@ -73,13 +73,13 @@
 
 /* Ethernet control pins */
 
-#define GPIO_ETH_NRST (GPIO_OUTPUT | GPIO_PUSHPULL | GPIO_SPEED_2MHz | GPIO_OUTPUT_CLEAR | GPIO_PORTB | GPIO_PIN2) /* PB2 */
+#define GPIO_ETH_NRST (GPIO_OUTPUT | GPIO_PUSHPULL | GPIO_SPEED_2MHz | GPIO_OUTPUT_SET | GPIO_PORTB | GPIO_PIN2) /* PB2 */
 
 /* LCD control pins */
 
 #define GPIO_LCD_NRST   (GPIO_OUTPUT | GPIO_PUSHPULL | GPIO_SPEED_2MHz | GPIO_OUTPUT_CLEAR | GPIO_PORTI | GPIO_PIN8) /* PI8 */
-#define GPIO_LCD_EN     (GPIO_OUTPUT | GPIO_PUSHPULL | GPIO_SPEED_2MHz | GPIO_OUTPUT_CLEAR | GPIO_PORTK | GPIO_PIN2) /* PK2 */
-#define GPIO_LCD_BL_PWM (GPIO_TIM4_CH2OUT_1 | GPIO_SPEED_10MHz) /* PB7 TIM4_CH2 */
+#define GPIO_LCD_EN     (GPIO_OUTPUT | GPIO_PUSHPULL | GPIO_SPEED_2MHz | GPIO_OUTPUT_SET | GPIO_PORTK | GPIO_PIN2) /* PK2 */
+#define GPIO_LCD_BL_PWM (GPIO_OUTPUT | GPIO_PUSHPULL | GPIO_SPEED_2MHz | GPIO_OUTPUT_SET | GPIO_PORTB | GPIO_PIN7) /* PB7 TIM4_CH2_OUT1 */
 
 /* BUTTONS */
 
@@ -123,7 +123,7 @@ int stm32_bringup(void);
 #ifdef CONFIG_STM32H7_OTGFS
 void weak_function stm32_usbinitialize(void);
 #else
-//#error You forgot to set CONFIG_STM32H7_OTGFS
+#error You forgot to set CONFIG_STM32H7_OTGFS
 #endif
 
 /****************************************************************************

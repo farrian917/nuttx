@@ -42,5 +42,8 @@ ifeq ($(CONFIG_FAT_DMAMEMORY),y)
 CSRCS += stm32_dma_alloc.c
 endif
 
+ifeq ($(CONFIG_STM32H7_OTGFS),y)
+CSRCS += stm32_usb.c
+endif
 
 include $(TOPDIR)/boards/Board.mk

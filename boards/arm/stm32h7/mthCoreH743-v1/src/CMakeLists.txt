@@ -40,6 +40,9 @@ if(CONFIG_FAT_DMAMEMORY)
   list(APPEND SRCS stm32_dma_alloc.c)
 endif()
 
+if(CONFIG_STM32H7_OTGFS)
+  list(APPEND SRCS stm32_usb.c)
+endif()
 
 target_sources(board PRIVATE ${SRCS})
 

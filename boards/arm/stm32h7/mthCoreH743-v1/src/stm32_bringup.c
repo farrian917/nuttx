@@ -90,6 +90,10 @@ int stm32_bringup(void)
   stm32_configgpio(GPIO_SDMMC1_D6_FLOAT);
   stm32_configgpio(GPIO_SDMMC1_D7_FLOAT);
 
+  stm32_configgpio(GPIO_LCD_EN);
+  stm32_configgpio(GPIO_ETH_NRST);
+  stm32_configgpio(GPIO_LCD_BL_PWM);
+
 #ifdef CONFIG_FS_PROCFS
   /* Mount the procfs file system */
 

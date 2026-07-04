@@ -248,7 +248,7 @@
 
 /* USB 1 and 2 clock source - PLL3 */
 
-// #define STM32_RCC_D2CCIP2R_USBSRC    RCC_D2CCIP2R_USBSEL_PLL3
+#define STM32_RCC_D2CCIP2R_USBSRC    RCC_D2CCIP2R_USBSEL_PLL3
 
 /* ADC 1 2 3 clock source - pll2_pclk */
 
