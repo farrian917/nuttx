@@ -38,6 +38,10 @@
 
 #include "stm32_gpio.h"
 
+#ifdef CONFIG_VIDEO_FB
+#  include <nuttx/video/fb.h>
+#endif
+
 /****************************************************************************
  * Private Functions
  ****************************************************************************/
@@ -90,10 +94,6 @@ int stm32_bringup(void)
   stm32_configgpio(GPIO_SDMMC1_D6_FLOAT);
   stm32_configgpio(GPIO_SDMMC1_D7_FLOAT);
 
-  stm32_configgpio(GPIO_LCD_EN);
-  stm32_configgpio(GPIO_ETH_NRST);
-  stm32_configgpio(GPIO_LCD_BL_PWM);
-
 #ifdef CONFIG_FS_PROCFS
   /* Mount the procfs file system */
 
@@ -130,6 +130,17 @@ int stm32_bringup(void)
   // }
 
 #endif
+
+#ifdef CONFIG_VIDEO_FB
+  /* Initialize and register the framebuffer driver */
+
+  ret = fb_register(0, 0);
+  if (ret < 0)
+    {
+      syslog(LOG_ERR, "ERROR: fb_register() failed: %d\n", ret);
+    }
+#endif
+
 
   return OK;
 }

@@ -46,4 +46,8 @@ ifeq ($(CONFIG_STM32H7_OTGFS),y)
 CSRCS += stm32_usb.c
 endif
 
+ifeq ($(CONFIG_STM32H7_LTDC),y)
+CSRCS += stm32_lcd.c
+endif
+
 include $(TOPDIR)/boards/Board.mk

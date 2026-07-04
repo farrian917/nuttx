@@ -99,7 +99,7 @@
  */
 
 #define STM32_PLLCFG_PLL1CFG     (RCC_PLLCFGR_PLL1VCOSEL_WIDE | \
-                                  RCC_PLLCFGR_PLL1RGE_4_8_MHZ | \
+                                  RCC_PLLCFGR_PLL1RGE_8_16_MHZ | \
                                   RCC_PLLCFGR_DIVP1EN | \
                                   RCC_PLLCFGR_DIVQ1EN | \
                                   RCC_PLLCFGR_DIVR1EN)
@@ -124,18 +124,18 @@
  *   PLL2R = PLL2_VCO/4  = 800 MHz / 4   = 200 MHz
  */
 #define STM32_PLLCFG_PLL2CFG (RCC_PLLCFGR_PLL2VCOSEL_WIDE | \
-                              RCC_PLLCFGR_PLL1RGE_4_8_MHZ | \
+                              RCC_PLLCFGR_PLL2RGE_8_16_MHZ | \
                               RCC_PLLCFGR_DIVP2EN | \
                               RCC_PLLCFGR_DIVQ2EN | \
                               RCC_PLLCFGR_DIVR2EN )
 
-#define STM32_VCO2_FREQUENCY     ((STM32_HSE_FREQUENCY / 3) * 240)
+#define STM32_VCO2_FREQUENCY     ((STM32_HSE_FREQUENCY / 3) * 200)
 #define STM32_PLL2P_FREQUENCY    (STM32_VCO2_FREQUENCY / 10)
 #define STM32_PLL2Q_FREQUENCY    (STM32_VCO2_FREQUENCY / 4)
 #define STM32_PLL2R_FREQUENCY    (STM32_VCO2_FREQUENCY / 4)
 
 #define STM32_PLLCFG_PLL2M       RCC_PLLCKSELR_DIVM2(3)
-#define STM32_PLLCFG_PLL2N       RCC_PLL2DIVR_N2(240)
+#define STM32_PLLCFG_PLL2N       RCC_PLL2DIVR_N2(200)
 #define STM32_PLLCFG_PLL2P       RCC_PLL2DIVR_P2(10)
 #define STM32_PLLCFG_PLL2Q       RCC_PLL2DIVR_Q2(4)
 #define STM32_PLLCFG_PLL2R       RCC_PLL2DIVR_R2(4)
@@ -258,8 +258,10 @@
 
 #define STM32_RCC_D1CCIPR_SDMMCSEL  RCC_D1CCIPR_SDMMC_PLL1
 
-/* FMC clock source, use STM32_PLL1Q_FREQUENCY  */
+/* FMC clock source, use STM32_PLL2R_FREQUENCY  */
+// #define BOARD_FMC_CLK               RCC_D1CCIPR_FMCSEL_PLL2
 #define BOARD_FMC_CLK               RCC_D1CCIPR_FMCSEL_HCLK
+
 
 /* Select HCLK to source clock of QSPI */
 // #define BOARD_QSPI_CLK  RCC_D1CCIPR_QSPISEL_HCLK
@@ -447,17 +449,21 @@
  * this value will need to be doubled.
  */
 
-#define BOARD_SDRAM1_SIZE        (32*1024*1024) /*32MB*/
+#ifdef CONFIG_STM32H7_LTDC
+#  define BOARD_SDRAM1_SIZE        (28*1024*1024)
+#else
+#  define BOARD_SDRAM1_SIZE        (32*1024*1024)
+#endif
 
 
 /* BOARD_FMC_SDCR1 - Initial value for SDRAM control registers for SDRAM
  *      bank 1. Note bank 2 isn't used!
  */
 
-#define BOARD_FMC_SDCR1  (FMC_SDCR_COLBITS_9 |   /* numcols = 8 bits */ \
+#define BOARD_FMC_SDCR1  (FMC_SDCR_COLBITS_9 |   /* numcols = 9 bits */ \
                           FMC_SDCR_ROWBITS_12 |  /* numrows = 12 bits */ \
                           FMC_SDCR_CASLAT_3 |   /* cas latency = 3 cycles */ \
-                          FMC_SDCR_WIDTH_32 |    /* width = 16 bits */ \
+                          FMC_SDCR_WIDTH_32 |    /* width = 32 bits */ \
                           FMC_SDCR_SDCLK_2X |    /* sdclk = 2 hclk */ \
                           FMC_SDCR_BANKS_4 |     /* 4 internal banks */ \
                           FMC_SDCR_BURST_READ |  /* enable burst read */ \
@@ -475,6 +481,15 @@
  * FMC_SDTR_TRCD  - Row to collumn delay
  */
 
+//  #define BOARD_FMC_SDTR1  (FMC_SDTR_TMRD(2) | /* tMRD     = 2CLK */ \
+//                            FMC_SDTR_TXSR(7) | /* tXSR min = ns */ \
+//                            FMC_SDTR_TRAS(5) | /* tRAS min = ns */ \
+//                            FMC_SDTR_TRC(6) |  /* tRC  min = ns */  \
+//                            FMC_SDTR_TWR(3) |  /* tWR      = ns */ \
+//                            FMC_SDTR_TRP(2) |  /* tRP  min = ns */ \
+//                            FMC_SDTR_TRCD(2)  /* tRCD min = ns */ )
+
+
 #define BOARD_FMC_SDTR1  (FMC_SDTR_TMRD(2) | /* tMRD     = 2CLK */ \
                            FMC_SDTR_TXSR(9) | /* tXSR min = ns */ \
                            FMC_SDTR_TRAS(6) | /* tRAS min = ns */ \
@@ -486,11 +501,11 @@
 #define BOARD_FMC_SDRAM_REFR_CYCLES  4096
 #define BOARD_FMC_SDRAM_REFR_PERIOD  64
 #define BOARD_FMC_SDRAM_AUTOREFRESH  8
-#define BOARD_FMC_SDRAM_MODE         (FMC_SDCMR_MRD_BURST_LENGTH_8 | \
+#define BOARD_FMC_SDRAM_MODE         (FMC_SDCMR_MRD_BURST_LENGTH_1 | \
                                       FMC_SDCMR_MRD_BURST_TYPE_SEQUENTIAL | \
                                       FMC_SDCMR_MRD_CAS_LATENCY_3 | \
-                                      FMC_SDCMR_MRD_OPERATING_MODE_STANDARD | \
-                                      FMC_SDCMR_MRD_WRITEBURST_MODE_PROGRAMMED)
+                                      FMC_SDCMR_MRD_OPERATING_MODE_STANDARD |\
+                                      FMC_SDCMR_MRD_WRITEBURST_MODE_SINGLE)
 
 #define BOARD_FMC_GPIO_CONFIGS \
   (GPIO_FMC_A0_0  | GPIO_SPEED_100MHz),     /* PF0 */ \

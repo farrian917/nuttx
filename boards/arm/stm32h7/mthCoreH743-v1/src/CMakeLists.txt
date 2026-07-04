@@ -44,6 +44,10 @@ if(CONFIG_STM32H7_OTGFS)
   list(APPEND SRCS stm32_usb.c)
 endif()
 
+if(CONFIG_STM32H7_LTDC)
+  list(APPEND SRCS stm32_lcd.c)
+endif()
+
 target_sources(board PRIVATE ${SRCS})
 
 if(NOT CONFIG_BUILD_FLAT)
