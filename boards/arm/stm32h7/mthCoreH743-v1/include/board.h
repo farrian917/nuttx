@@ -445,7 +445,7 @@
  */
 
 #ifdef CONFIG_STM32H7_LTDC
-#  define BOARD_SDRAM1_SIZE        (28*1024*1024)
+#  define BOARD_SDRAM1_SIZE        (26*1024*1024)
 #else
 #  define BOARD_SDRAM1_SIZE        (32*1024*1024)
 #endif

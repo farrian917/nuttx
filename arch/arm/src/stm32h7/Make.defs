@@ -87,6 +87,10 @@ ifeq ($(CONFIG_STM32H7_DMA),y)
 CHIP_CSRCS += stm32_dma.c
 endif
 
+ifeq ($(CONFIG_STM32H7_DMA2D),y)
+CHIP_CSRCS += stm32_dma2d.c
+endif
+
 ifeq ($(CONFIG_STM32H7_FMC),y)
 CHIP_CSRCS += stm32_fmc.c
 endif

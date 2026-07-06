@@ -20,8 +20,8 @@
  *
  ****************************************************************************/
 
-#ifndef __ARCH_ARM_SRC_STM32F7_STM32_LTDC_H
-#define __ARCH_ARM_SRC_STM32F7_STM32_LTDC_H
+#ifndef __ARCH_ARM_SRC_STM32H7_STM32_LTDC_H
+#define __ARCH_ARM_SRC_STM32H7_STM32_LTDC_H
 
 /****************************************************************************
  * Included Files
@@ -96,7 +96,7 @@ struct fb_vtable_s *stm32_ltdcgetvplane(int vplane);
  *
  ****************************************************************************/
 
-#ifdef CONFIG_STM32F7_LCD_BACKLIGHT
+#ifdef CONFIG_STM32H7_LCD_BACKLIGHT
 void stm32_backlight(bool blon);
 #endif
-#endif /* __ARCH_ARM_SRC_STM32F7_STM32_LTDC_H */
+#endif /* __ARCH_ARM_SRC_STM32H7_STM32_LTDC_H */

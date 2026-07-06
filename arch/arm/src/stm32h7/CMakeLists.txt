@@ -89,6 +89,10 @@ if(CONFIG_STM32H7_DMA)
   list(APPEND SRCS stm32_dma.c)
 endif()
 
+if(CONFIG_STM32H7_DMA2D)
+  list(APPEND SRCS stm32_dma2d.c)
+endif()
+
 if(CONFIG_STM32H7_FMC)
   list(APPEND SRCS stm32_fmc.c)
 endif()
