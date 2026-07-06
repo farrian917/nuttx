@@ -37,6 +37,7 @@
 #include "mthCoreH743-v1.h"
 
 #include "stm32_gpio.h"
+#include "stm32_i2c.h"
 
 #ifdef CONFIG_VIDEO_FB
 #  include <nuttx/video/fb.h>
@@ -49,6 +50,57 @@
 /****************************************************************************
  * Public Functions
  ****************************************************************************/
+
+ /****************************************************************************
+ * Name: stm32_i2c_register
+ *
+ * Description:
+ *   Register one I2C drivers for the I2C tool.
+ *
+ ****************************************************************************/
+
+#if defined(CONFIG_I2C) && defined(CONFIG_SYSTEM_I2CTOOL)
+static void stm32_i2c_register(int bus)
+{
+  struct i2c_master_s *i2c;
+  int ret;
+
+  i2c = stm32_i2cbus_initialize(bus);
+  if (i2c == NULL)
+    {
+      syslog(LOG_ERR, "ERROR: Failed to get I2C%d interface\n", bus);
+    }
+  else
+    {
+      ret = i2c_register(i2c, bus);
+      if (ret < 0)
+        {
+          syslog(LOG_ERR, "ERROR: Failed to register I2C%d driver: %d\n",
+                 bus, ret);
+          stm32_i2cbus_uninitialize(i2c);
+        }
+    }
+}
+#endif
+
+/****************************************************************************
+ * Name: stm32_i2ctool
+ *
+ * Description:
+ *   Register I2C drivers for the I2C tool.
+ *
+ ****************************************************************************/
+
+#if defined(CONFIG_I2C) && defined(CONFIG_SYSTEM_I2CTOOL)
+static void stm32_i2ctool(void)
+{
+#ifdef CONFIG_STM32H7_I2C4
+  stm32_i2c_register(4);
+#endif
+}
+#endif
+
+
 
 /****************************************************************************
  * Name: stm32_bringup
@@ -71,21 +123,6 @@ int stm32_bringup(void)
 
   UNUSED(ret);
 
-  
-  // stm32_configgpio(GPIO_OUTPUT | GPIO_PUSHPULL | GPIO_SPEED_50MHz | GPIO_OUTPUT_SET | GPIO_PORTC | GPIO_PIN8); /* PG3 */
-
-  // for(int iii = 0; iii < 1000; iii++)
-  // {
-  //  stm32_gpiowrite(GPIO_OUTPUT | GPIO_PUSHPULL | GPIO_SPEED_50MHz | GPIO_OUTPUT_SET | GPIO_PORTC | GPIO_PIN8, 0);
-
-  //   usleep(10000);
-
-  //    stm32_gpiowrite(GPIO_OUTPUT | GPIO_PUSHPULL | GPIO_SPEED_50MHz | GPIO_OUTPUT_SET | GPIO_PORTC | GPIO_PIN8, 1);
-  //     usleep(10000);
-  // }
-
-
-
   stm32_configgpio(GPIO_SDMMC1_D1_FLOAT);
   stm32_configgpio(GPIO_SDMMC1_D2_FLOAT);
   stm32_configgpio(GPIO_SDMMC1_D3_FLOAT);  
@@ -93,6 +130,10 @@ int stm32_bringup(void)
   stm32_configgpio(GPIO_SDMMC1_D5_FLOAT);
   stm32_configgpio(GPIO_SDMMC1_D6_FLOAT);
   stm32_configgpio(GPIO_SDMMC1_D7_FLOAT);
+
+#if defined(CONFIG_I2C) && defined(CONFIG_SYSTEM_I2CTOOL)
+  stm32_i2ctool();
+#endif
 
 #ifdef CONFIG_FS_PROCFS
   /* Mount the procfs file system */
@@ -138,6 +179,16 @@ int stm32_bringup(void)
   if (ret < 0)
     {
       syslog(LOG_ERR, "ERROR: fb_register() failed: %d\n", ret);
+    }
+#endif
+
+#ifdef CONFIG_INPUT_FT5X06
+  /* Initialize the touchscreen */
+
+  ret = stm32_tsc_setup(0);
+  if (ret < 0)
+    {
+      syslog(LOG_ERR, "ERROR: stm32_tsc_setup failed: %d\n", ret);
     }
 #endif
 

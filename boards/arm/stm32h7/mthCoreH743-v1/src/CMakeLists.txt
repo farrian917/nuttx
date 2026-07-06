@@ -48,6 +48,10 @@ if(CONFIG_STM32H7_LTDC)
   list(APPEND SRCS stm32_lcd.c)
 endif()
 
+if(CONFIG_INPUT_FT5X06)
+  list(APPEND SRCS stm32_touchscreen.c)
+endif()
+
 target_sources(board PRIVATE ${SRCS})
 
 if(NOT CONFIG_BUILD_FLAT)

@@ -48,7 +48,7 @@
  *
  * So we have these clock source available within the STM32
  *
- *   HSI: 16 MHz RC factory-trimmed
+ *   HSI: 16 MHz RC factory-trimmed. Divider by 4 is selected.
  *   LSI: 32 KHz RC
  *   HSE: 12 MHz crystal
  *   LSE: 32.768 kHz
@@ -56,7 +56,7 @@
 
 #define STM32_BOARD_XTAL        12000000ul
 
-#define STM32_HSI_FREQUENCY     64000000ul
+#define STM32_HSI_FREQUENCY     16000000ul
 #define STM32_LSI_FREQUENCY     32000
 #define STM32_HSE_FREQUENCY     STM32_BOARD_XTAL
 #define STM32_LSE_FREQUENCY     32768
@@ -232,7 +232,7 @@
 
 /* I2C4 clock source - HSI */
 
-// #define STM32_RCC_D3CCIPR_I2C4SRC    RCC_D3CCIPR_I2C4SEL_HSI
+ #define STM32_RCC_D3CCIPR_I2C4SRC    RCC_D3CCIPR_I2C4SEL_HSI
 
 /* SPI123 clock source - PLL1Q */
 
@@ -377,20 +377,15 @@
  * has halted.
  */
 
-//  !!!FROM HERE FOR LEDS ONLY END
-
-/* I2C3 - Used by INA226 and touch screen */
+/* I2C4 - There is a FT5336 TouchPanel and INA226 */
 
 #define GPIO_I2C4_SCL (GPIO_I2C4_SCL_1 | GPIO_SPEED_100MHz) /* PD12 */
 #define GPIO_I2C4_SDA (GPIO_I2C4_SDA_1 | GPIO_SPEED_100MHz) /* PD13 */
 
-/* I2C4 - There is a FT5336 TouchPanel and INA226 */
-
 #define ADJ_SLEW_RATE(p) (((p) & ~GPIO_SPEED_MASK) | (GPIO_SPEED_100MHz))
 #define GPIO_TP_INT  (GPIO_INPUT | GPIO_PULLDOWN | GPIO_EXTI | GPIO_PORTC | GPIO_PIN13) /* PC13 */
 #define GPIO_TP_RST  (GPIO_OUTPUT | GPIO_PUSHPULL | GPIO_SPEED_100MHz | GPIO_OUTPUT_CLEAR | GPIO_PORTG | GPIO_PIN2) /* PG2 */
-#define FT5X06_I2C_ADDRESS          (0x38)!!!!
-
+#define FT5X06_I2C_ADDRESS          (0x38) //!!!!
 #define INA226_I2C_ADDRESS          (0x40)
 
 /* QSPI Mapping for QSPI FLASH 128Mb  */

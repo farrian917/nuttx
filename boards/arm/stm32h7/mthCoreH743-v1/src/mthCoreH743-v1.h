@@ -219,7 +219,7 @@ int stm32_w25qxxx_setup(void);
 #ifdef CONFIG_INPUT_FT5X06
 int stm32_tsc_setup(int minor);
 #else
-//#error You forgot to set CONFIG_INPUT_FT5X06 
+#error You forgot to set CONFIG_INPUT_FT5X06 
 #endif
 
 #endif /* __BOARDS_ARM_STM32H7_MTHCOREH743_V1_SRC_MTHCOREH743_V1_H */
