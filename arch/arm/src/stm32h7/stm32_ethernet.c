@@ -50,6 +50,7 @@
 #include <nuttx/net/ip.h>
 #include <nuttx/net/netdev.h>
 #include <nuttx/crc64.h>
+#include <nuttx/net/phy.h>
 
 #if defined(CONFIG_NET_PKT)
 #  include <nuttx/net/pkt.h>
@@ -177,6 +178,18 @@
 
 #ifdef CONFIG_STM32H7_ETH_PTP
 #  warning "CONFIG_STM32H7_ETH_PTP is not yet supported"
+#endif
+
+/* These definitions are used to enable the PHY interrupts */
+
+#if defined(CONFIG_NETDEV_PHY_IOCTL) && defined(CONFIG_ARCH_PHY_INTERRUPT)
+# if defined( CONFIG_ETH0_PHY_DP83848C)
+#     define MII_INT_REG    MII_DP83848C_MISR
+#       define MII_INT_SETEN  MII_DP83848C_LINK_INT_EN
+#       define MII_INT_CLREN  0
+# else
+# error unknown PHY
+# endif
 #endif
 
 #undef CONFIG_STM32H7_ETH_HWCHECKSUM
@@ -2942,6 +2955,7 @@ static void stm32_rxdescinit(struct stm32_ethmac_s *priv,
 #ifdef CONFIG_NETDEV_PHY_IOCTL
 static int stm32_ioctl(struct net_driver_s *dev, int cmd, unsigned long arg)
 {
+  
 #ifndef CONFIG_STM32H7_NO_PHY
 #ifdef CONFIG_ARCH_PHY_INTERRUPT
   struct stm32_ethmac_s *priv = (struct stm32_ethmac_s *)dev->d_private;
@@ -2953,8 +2967,8 @@ static int stm32_ioctl(struct net_driver_s *dev, int cmd, unsigned long arg)
 #ifdef CONFIG_ARCH_PHY_INTERRUPT
       case SIOCMIINOTIFY: /* Set up for PHY event notifications */
         {
-          struct mii_iotcl_notify_s *req =
-            (struct mii_iotcl_notify_s *)((uintptr_t)arg);
+          struct mii_ioctl_notify_s *req =
+            (struct mii_ioctl_notify_s *)((uintptr_t)arg);
 
           ret = phy_notify_subscribe(dev->d_ifname, req->pid, req->signo,
                                      req->arg);
@@ -3029,8 +3043,21 @@ static int stm32_ioctl(struct net_driver_s *dev, int cmd, unsigned long arg)
 #if defined(CONFIG_NETDEV_PHY_IOCTL) && defined(CONFIG_ARCH_PHY_INTERRUPT)
 static int stm32_phyintenable(struct stm32_ethmac_s *priv)
 {
-#warning Missing logic
-  return -ENOSYS;
+  uint16_t phyval;
+  int ret;
+
+  ret = stm32_phyread(CONFIG_STM32H7_PHYADDR, MII_INT_REG, &phyval);
+    if (ret == OK)
+    {
+        /* Enable link up/down interrupts */
+
+  #ifdef CONFIG_ETH0_PHY_DP83848C
+        ret = stm32_phywrite(CONFIG_STM32H7_PHYADDR, MII_DP83848C_MICR, MII_DP83848C_INT_EN | MII_DP83848C_INT_OEN, 0xffff);
+  #endif
+        ret = stm32_phywrite(CONFIG_STM32H7_PHYADDR, MII_INT_REG, (phyval & ~MII_INT_CLREN) | MII_INT_SETEN, 0xffff);
+    }
+
+  return ret;
 }
 #endif
 
@@ -4064,18 +4091,7 @@ static int stm32_ethconfig(struct stm32_ethmac_s *priv)
   /* NOTE: The Ethernet clocks were initialized early in the boot-up
    * sequence in stm32_rcc.c.
    */
-
-#ifdef CONFIG_STM32H7_PHYINIT
-  /* Perform any necessary, board-specific PHY initialization */
-
-  ret = stm32_phy_boardinitialize(0);
-  if (ret < 0)
-    {
-      nerr("ERROR: Failed to initialize the PHY: %d\n", ret);
-      return ret;
-    }
-#endif
-
+  
   /* Initialize the free buffer list */
 
   stm32_initbuffer(priv, &g_txbuffer[priv->intf * TXBUFFER_SIZE]);

@@ -52,6 +52,10 @@ if(CONFIG_INPUT_FT5X06)
   list(APPEND SRCS stm32_touchscreen.c)
 endif()
 
+if(CONFIG_ETH0_PHY_DP83848C)
+  list(APPEND SRCS stm32_phyinit.c)
+endif()
+
 target_sources(board PRIVATE ${SRCS})
 
 if(NOT CONFIG_BUILD_FLAT)

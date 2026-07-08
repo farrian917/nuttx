@@ -131,17 +131,6 @@ int stm32_bringup(void)
   stm32_configgpio(GPIO_SDMMC1_D6_FLOAT);
   stm32_configgpio(GPIO_SDMMC1_D7_FLOAT);
 
-#ifdef CONFIG_STM32H7_RMII
-  /* Reset Ethernet PHY */
-
-  stm32_configgpio(GPIO_ETH_NRST);
-
-  stm32_gpiowrite(GPIO_ETH_NRST, 1);
-  usleep(50000);
-  stm32_gpiowrite(GPIO_ETH_NRST, 0);
-  usleep(50000);
-  stm32_gpiowrite(GPIO_ETH_NRST, 1);
-#endif
 
 
 #if defined(CONFIG_I2C) && defined(CONFIG_SYSTEM_I2CTOOL)

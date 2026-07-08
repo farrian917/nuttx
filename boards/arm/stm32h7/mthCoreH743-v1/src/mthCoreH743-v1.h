@@ -46,7 +46,7 @@
 
 #define HAVE_RTC_DRIVER 1
 #if !defined(CONFIG_RTC) || !defined(CONFIG_RTC_DRIVER)
-#error You forgot about RTC driver
+//#error You forgot about RTC driver
 #endif
 
 /* USB OTG FS */
@@ -73,7 +73,8 @@
 
 /* Ethernet control pins */
 
-#define GPIO_ETH_NRST (GPIO_OUTPUT | GPIO_PUSHPULL | GPIO_SPEED_2MHz | GPIO_OUTPUT_CLEAR | GPIO_PORTB | GPIO_PIN2) /* PB2 */
+#define GPIO_ETH_NRST (GPIO_OUTPUT | GPIO_PUSHPULL | GPIO_SPEED_2MHz | GPIO_OUTPUT_SET | GPIO_PORTB | GPIO_PIN2) /* PB2 */
+#define GPIO_ETH_NINT         (GPIO_INPUT|GPIO_PULLUP|GPIO_EXTI| GPIO_PORTH|GPIO_PIN6)   /* PH6 */
 
 /* LCD control pins */
 
@@ -123,7 +124,7 @@ int stm32_bringup(void);
 #ifdef CONFIG_STM32H7_OTGFS
 void weak_function stm32_usbinitialize(void);
 #else
-#error You forgot to set CONFIG_STM32H7_OTGFS
+//#error You forgot to set CONFIG_STM32H7_OTGFS
 #endif
 
 /****************************************************************************
@@ -154,7 +155,7 @@ int stm32_dma_alloc_init(void);
 #ifdef HAVE_SDIO
 int stm32_sdio_initialize(void);
 #else
-#error You forgot to activate SDIO/MMC 
+//#error You forgot to activate SDIO/MMC 
 #endif
 
 /****************************************************************************
@@ -219,7 +220,7 @@ int stm32_w25qxxx_setup(void);
 #ifdef CONFIG_INPUT_FT5X06
 int stm32_tsc_setup(int minor);
 #else
-#error You forgot to set CONFIG_INPUT_FT5X06 
+//#error You forgot to set CONFIG_INPUT_FT5X06 
 #endif
 
 #endif /* __BOARDS_ARM_STM32H7_MTHCOREH743_V1_SRC_MTHCOREH743_V1_H */

@@ -99,7 +99,7 @@
  */
 
 #define STM32_PLLCFG_PLL1CFG     (RCC_PLLCFGR_PLL1VCOSEL_WIDE | \
-                                  RCC_PLLCFGR_PLL1RGE_8_16_MHZ | \
+                                  RCC_PLLCFGR_PLL1RGE_4_8_MHZ | \
                                   RCC_PLLCFGR_DIVP1EN | \
                                   RCC_PLLCFGR_DIVQ1EN | \
                                   RCC_PLLCFGR_DIVR1EN)
@@ -124,7 +124,7 @@
  *   PLL2R = PLL2_VCO/4  = 800 MHz / 4   = 200 MHz
  */
 #define STM32_PLLCFG_PLL2CFG (RCC_PLLCFGR_PLL2VCOSEL_WIDE | \
-                              RCC_PLLCFGR_PLL2RGE_8_16_MHZ | \
+                              RCC_PLLCFGR_PLL2RGE_4_8_MHZ | \
                               RCC_PLLCFGR_DIVP2EN | \
                               RCC_PLLCFGR_DIVQ2EN | \
                               RCC_PLLCFGR_DIVR2EN )
@@ -322,7 +322,6 @@
 // #define GPIO_SDMMC1_D6   (GPIO_SDMMC1_D6_0)  /* PC6 */
 // #define GPIO_SDMMC1_D7   (GPIO_SDMMC1_D7_0)  /* PC7 */
 
-
 #define GPIO_SDMMC1_D1_FLOAT      (GPIO_INPUT | GPIO_PULLDOWN | GPIO_PORTC | GPIO_PIN9)
 #define GPIO_SDMMC1_D2_FLOAT      (GPIO_INPUT | GPIO_PULLDOWN | GPIO_PORTC | GPIO_PIN10)
 #define GPIO_SDMMC1_D3_FLOAT      (GPIO_INPUT | GPIO_PULLDOWN | GPIO_PORTC | GPIO_PIN11)
@@ -398,7 +397,7 @@
 #define GPIO_QSPI_SCK (GPIO_QUADSPI_CLK_2|GPIO_SPEED_100MHz)     /* PF10 */
 
 /* SPI5 for LORA SX126x */
-#define GPIO_SPI5_SCK       (GPIO_SPI5_SCK_2 | GPIO_SPEED_100MHz)   /* PH6 */
+//#define GPIO_SPI5_SCK       (GPIO_SPI5_SCK_2 | GPIO_SPEED_100MHz)   /* PH6 */
 #define GPIO_SPI5_MISO      (GPIO_SPI5_MISO_2 | GPIO_SPEED_100MHz)  /* PH7 */
 #define GPIO_SPI5_MOSI      (GPIO_SPI5_MOSI_3 | GPIO_SPEED_100MHz)  /* PJ10 */
 #define GPIO_LORA_CS        (GPIO_OUTPUT | GPIO_PUSHPULL | GPIO_SPEED_50MHz | GPIO_OUTPUT_SET | GPIO_PORTG | GPIO_PIN3) /* PG3 */
