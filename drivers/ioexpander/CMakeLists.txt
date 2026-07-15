@@ -43,6 +43,10 @@ if(CONFIG_IOEXPANDER)
     list(APPEND SRCS pca9538.c)
   endif()
 
+  if(CONFIG_IOEXPANDER_PCA9539)
+    list(APPEND SRCS pca9539.c)
+  endif()
+
   if(CONFIG_IOEXPANDER_TCA64XX)
     list(APPEND SRCS tca64xx.c)
   endif()

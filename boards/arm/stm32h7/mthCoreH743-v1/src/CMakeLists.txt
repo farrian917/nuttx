@@ -60,6 +60,11 @@ if(CONFIG_SENSORS_INA226)
   list(APPEND SRCS stm32_ina226.c)
 endif()
 
+if(CONFIG_IOEXPANDER)
+  list(APPEND SRCS stm32_expander.c)
+endif()
+
+
 
 target_sources(board PRIVATE ${SRCS})
 

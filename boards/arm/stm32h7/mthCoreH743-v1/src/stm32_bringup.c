@@ -206,6 +206,20 @@ int stm32_bringup(void)
     }
 #endif
 
+#ifdef CONFIG_IOEXPANDER
+  /* Initialize and register the INA226 */
+
+  ret = stm32_expander_initialization();
+  if (ret != OK)
+    {
+      syslog(LOG_ERR,
+             "ERROR: Failed to register the EXPANDER drivers: %d\n", ret);
+      return ret;
+    }
+#endif
+
+
+
 
 
   return OK;

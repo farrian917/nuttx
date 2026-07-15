@@ -58,9 +58,15 @@ ifeq ($(CONFIG_ETH0_PHY_DP83848C),y)
 CSRCS += stm32_phyinit.c
 endif
 
-ifeq ($(CONFIG_ETH0_PHY_DP83848C),y)
+ifeq ($(CONFIG_SENSORS_INA226),y)
 CSRCS += stm32_ina226.c
 endif
+
+ifeq ($(CONFIG_IOEXPANDER),y)
+CSRCS += stm32_expander.c
+endif
+
+
 
 
 

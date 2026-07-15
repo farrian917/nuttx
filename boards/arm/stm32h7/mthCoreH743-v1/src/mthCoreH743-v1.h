@@ -235,4 +235,16 @@ int stm32_tsc_setup(int minor);
 int stm32_ina226_initialization(void);
 #endif
 
+/****************************************************************************
+ * Name: stm32_expander_initialization
+ *
+ * Description:
+ *   Initialize and configure the EXPANDER
+ *
+ ****************************************************************************/
+
+#ifdef CONFIG_IOEXPANDER
+int stm32_expander_initialization(void);
+#endif
+
 #endif /* __BOARDS_ARM_STM32H7_MTHCOREH743_V1_SRC_MTHCOREH743_V1_H */
