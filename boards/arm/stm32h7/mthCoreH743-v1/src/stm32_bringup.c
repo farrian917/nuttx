@@ -218,6 +218,19 @@ int stm32_bringup(void)
     }
 #endif
 
+#ifdef CONFIG_WS2812
+  /* Initialize and register the INA226 */
+
+  ret = stm32_ws2812_initialize("/dev/leds0", 6);
+  if (ret != OK)
+    {
+      syslog(LOG_ERR,
+             "ERROR: Failed to register the WS2812 drivers: %d\n", ret);
+      return ret;
+    }
+#endif
+
+
 
 
 

@@ -40,7 +40,9 @@
 
 /* serial LED WS2812 PWM channel */
 
-#define GPIO_WS2812_PWM (GPIO_TIM2_CH1OUT_1 | GPIO_SPEED_50MHz) /* PA0 TIM2_CH1 */
+// #define GPIO_WS2812_PWM (GPIO_TIM2_CH1OUT_1 | GPIO_SPEED_50MHz) /* PA0 TIM2_CH1 */
+
+// #define GPIO_TIM2_CH1OUT GPIO_WS2812_PWM
 
 /* Check if we can support the RTC driver */
 
@@ -246,5 +248,18 @@ int stm32_ina226_initialization(void);
 #ifdef CONFIG_IOEXPANDER
 int stm32_expander_initialization(void);
 #endif
+
+/****************************************************************************
+ * Name: stm32_ws2812_hw
+ *
+ * Description:
+ *   Initialize and configure the EXPANDER
+ *
+ ****************************************************************************/
+
+#ifdef CONFIG_WS2812
+int stm32_ws2812_initialize(FAR const char *devpath, uint16_t num_leds);
+#endif
+
 
 #endif /* __BOARDS_ARM_STM32H7_MTHCOREH743_V1_SRC_MTHCOREH743_V1_H */

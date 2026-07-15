@@ -64,7 +64,9 @@ if(CONFIG_IOEXPANDER)
   list(APPEND SRCS stm32_expander.c)
 endif()
 
-
+if(CONFIG_WS2812)
+  list(APPEND SRCS stm32_ws2812.c)
+endif()
 
 target_sources(board PRIVATE ${SRCS})
 

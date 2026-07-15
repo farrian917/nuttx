@@ -332,6 +332,10 @@
 
 /* LED definitions **********************************************************/
 
+#define GPIO_WS2812_PWM ((GPIO_ALT | GPIO_AF1 | GPIO_OPENDRAIN | GPIO_PORTA | GPIO_PIN0) | GPIO_SPEED_50MHz) /* PA0 TIM2_CH1 */
+
+#define GPIO_TIM2_CH1OUT GPIO_WS2812_PWM
+
 /* The board has 6 user serial LED that could be used this diagnostic LED too.
  *
  * If CONFIG_ARCH_LEDS is not defined, then the user can control the LEDs in

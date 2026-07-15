@@ -66,6 +66,12 @@ ifeq ($(CONFIG_IOEXPANDER),y)
 CSRCS += stm32_expander.c
 endif
 
+ifeq ($(CONFIG_WS2812),y)
+CSRCS += stm32_ws2812.c
+endif
+
+
+
 
 
 
