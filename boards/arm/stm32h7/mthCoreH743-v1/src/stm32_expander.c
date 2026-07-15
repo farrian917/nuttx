@@ -106,14 +106,26 @@ int stm32_expander_initialization(void)
           return ret;
         }
 
+      ret = gpio_lower_half(ioe, 13, GPIO_OUTPUT_PIN, 13);
+      if (ret < 0)
+        {
+          syslog(LOG_ERR, "ERROR: Failed to register PCA9539 pin 13: %d\n", ret);
+          return ret;
+        }
+
+      ret = gpio_lower_half(ioe, 14, GPIO_OUTPUT_PIN, 14);
+      if (ret < 0)
+        {
+          syslog(LOG_ERR, "ERROR: Failed to register PCA9539 pin 14: %d\n", ret);
+          return ret;
+        }
+
       ret = gpio_lower_half(ioe, 15, GPIO_OUTPUT_PIN, 15);
       if (ret < 0)
         {
           syslog(LOG_ERR, "ERROR: Failed to register PCA9539 pin 15: %d\n", ret);
           return ret;
         }
-
-
 
       /* Now we are initialized */
 
