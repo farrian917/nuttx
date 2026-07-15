@@ -56,6 +56,11 @@ if(CONFIG_ETH0_PHY_DP83848C)
   list(APPEND SRCS stm32_phyinit.c)
 endif()
 
+if(CONFIG_SENSORS_INA226)
+  list(APPEND SRCS stm32_ina226.c)
+endif()
+
+
 target_sources(board PRIVATE ${SRCS})
 
 if(NOT CONFIG_BUILD_FLAT)

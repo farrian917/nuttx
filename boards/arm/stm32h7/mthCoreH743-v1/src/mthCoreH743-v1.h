@@ -223,4 +223,16 @@ int stm32_tsc_setup(int minor);
 //#error You forgot to set CONFIG_INPUT_FT5X06 
 #endif
 
+/****************************************************************************
+ * Name: stm32_ina226_initialization
+ *
+ * Description:
+ *   Initialize and configure the INA226
+ *
+ ****************************************************************************/
+
+#ifdef CONFIG_SENSORS_INA226
+int stm32_ina226_initialization(void);
+#endif
+
 #endif /* __BOARDS_ARM_STM32H7_MTHCOREH743_V1_SRC_MTHCOREH743_V1_H */
