@@ -31,12 +31,12 @@
 #define WS2812_PWM_FREQ       800000  /* Частота ШИМ строго 800 кГц (1.25 мкс) */
 
 /* Строго прямые (БЕЗ ИНВЕРСИЙ) значения скважности под вашу шину 240 МГц (ARR=300):
- * Логический 0 (T0H = 300 нс) -> 72 такта
+ * Логический 0 (T0H = 350 нс) -> 84 такта
  * Логическая 1 (T1H = 650 нс) -> 156 тактов
  */
 #define WS2812_ARR_VALUE      (300 - 1)  
-#define WS2812_CCR_BIT0       100         
-#define WS2812_CCR_BIT1       150        
+#define WS2812_CCR_BIT0       84         
+#define WS2812_CCR_BIT1       156        
 
 /****************************************************************************
  * Private Types
@@ -113,9 +113,9 @@ static ssize_t stm32_ws2812_write(FAR struct file *filep, FAR const char *data, 
   /* Преобразование в прямые импульсы ШИМ (PWM Mode 1) */
   for (i = 0; i < num_leds_to_update; i++)
     {
-      uint8_t r = 255; /* Фиксируем максимальную яркость белого */
-      uint8_t g = 255;
-      uint8_t b = 255;
+      uint8_t r = data[i * 4 + 2]; 
+      uint8_t g = data[i * 4 + 1];
+      uint8_t b = data[i * 4 + 0];      
 
       uint32_t grb = ((uint32_t)g << 16) | ((uint32_t)r << 8) | b;
 
@@ -207,7 +207,7 @@ int stm32_ws2812_initialize(FAR const char *devpath, uint16_t num_leds)
   modifyreg32(STM32_RCC_APB1LENR, 0, RCC_APB1LENR_TIM2EN);
   modifyreg32(STM32_RCC_APB1LRSTR, RCC_APB1LRSTR_TIM2RST, 0);
 
-  stm32_configgpio(GPIO_ALT | GPIO_AF1 | GPIO_OPENDRAIN | GPIO_PORTA | GPIO_PIN0 | GPIO_SPEED_50MHz);
+  stm32_configgpio(GPIO_ALT | GPIO_AF1 | GPIO_PUSHPULL | GPIO_PORTA | GPIO_PIN0 | GPIO_SPEED_50MHz);
 
   memset(&g_ws2812_priv, 0, sizeof(struct stm32_ws2812_priv_s));
   g_ws2812_priv.num_leds = num_leds;
