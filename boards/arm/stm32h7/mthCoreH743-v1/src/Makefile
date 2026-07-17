@@ -38,6 +38,10 @@ ifeq ($(CONFIG_STM32H7_SDMMC1),y)
 CSRCS += stm32_sdmmc.c
 endif
 
+ifeq ($(CONFIG_STM32H7_SDMMC2),y)
+CSRCS += stm32_sdmmc.c
+endif
+
 ifeq ($(CONFIG_FAT_DMAMEMORY),y)
 CSRCS += stm32_dma_alloc.c
 endif
