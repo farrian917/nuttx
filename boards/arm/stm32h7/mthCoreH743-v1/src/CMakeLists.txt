@@ -32,11 +32,11 @@ if(CONFIG_BOARDCTL)
   list(APPEND SRCS stm32_appinitialize.c)
 endif()
 
-if(CONFIG_STM32H7_SDMMC1)
+if(CONFIG_STM32_SDMMC1)
   list(APPEND SRCS stm32_sdmmc.c)
 endif()
 
-if(CONFIG_STM32H7_SDMMC2)
+if(CONFIG_STM32_SDMMC2)
   list(APPEND SRCS stm32_sdmmc.c)
 endif()
 
@@ -44,11 +44,11 @@ if(CONFIG_FAT_DMAMEMORY)
   list(APPEND SRCS stm32_dma_alloc.c)
 endif()
 
-if(CONFIG_STM32H7_OTGFS)
+if(CONFIG_STM32_OTGFS)
   list(APPEND SRCS stm32_usb.c)
 endif()
 
-if(CONFIG_STM32H7_LTDC)
+if(CONFIG_STM32_LTDC)
   list(APPEND SRCS stm32_lcd.c)
 endif()
 

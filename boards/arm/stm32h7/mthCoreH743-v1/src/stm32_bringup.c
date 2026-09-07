@@ -94,7 +94,7 @@ static void stm32_i2c_register(int bus)
 #if defined(CONFIG_I2C) && defined(CONFIG_SYSTEM_I2CTOOL)
 static void stm32_i2ctool(void)
 {
-#ifdef CONFIG_STM32H7_I2C4
+#ifdef CONFIG_STM32_I2C4
   stm32_i2c_register(4);
 #endif
 }
@@ -125,7 +125,7 @@ int stm32_bringup(void)
 
   stm32_configgpio(GPIO_SDMMC1_D1_FLOAT);
   stm32_configgpio(GPIO_SDMMC1_D2_FLOAT);
-  stm32_configgpio(GPIO_SDMMC1_D3_FLOAT);  
+  stm32_configgpio(GPIO_SDMMC1_D3_FLOAT);
   stm32_configgpio(GPIO_SDMMC1_D4_FLOAT);
   stm32_configgpio(GPIO_SDMMC1_D5_FLOAT);
   stm32_configgpio(GPIO_SDMMC1_D6_FLOAT);

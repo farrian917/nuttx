@@ -32,8 +32,8 @@
 #include <nuttx/i2c/i2c_master.h>
 
 
-#include <nuttx/ioexpander/pca9539.h> 
-#include <nuttx/ioexpander/gpio.h>    
+#include <nuttx/ioexpander/pca9539.h>
+#include <nuttx/ioexpander/gpio.h>
 
 #include "stm32_i2c.h"
 #include "mthCoreH743-v1.h"
@@ -42,8 +42,8 @@
  * Pre-processor Definitions
  ****************************************************************************/
 
-#ifndef CONFIG_STM32H7_I2C4
-#  error "EXPANDER support requires CONFIG_STM32H7_I2C4"
+#ifndef CONFIG_STM32_I2C4
+#  error "EXPANDER support requires CONFIG_STM32_I2C4"
 #endif
 
 #define EXPANDER_I2C_ADDR    0x74 /* VBUS */
@@ -70,7 +70,7 @@ int stm32_expander_initialization(void)
   static bool          initialized = false;
   int                  ret         = OK;
 
-  struct pca9539_config_s *pca9539_cfg = NULL; 
+  struct pca9539_config_s *pca9539_cfg = NULL;
 
   FAR struct ioexpander_dev_s *ioe;
 

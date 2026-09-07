@@ -433,7 +433,7 @@
  * part-number and FMC_SDCLK frequency of 120 MHz
  */
 
-#if CONFIG_STM32H7_FMC
+#if CONFIG_STM32_FMC
 #  define FMC_SDCLK_FREQUENCY  (STM32_HCLK_FREQUENCY / 2)
 #  if FMC_SDCLK_FREQUENCY > 120000000
 #    error "FMC SDRAM settings need to be adjusted for a higher FMC_SDCLK frequency"
@@ -447,7 +447,7 @@
  * this value will need to be doubled.
  */
 
-#ifdef CONFIG_STM32H7_LTDC
+#ifdef CONFIG_STM32_LTDC
 #  define BOARD_SDRAM1_SIZE        (26*1024*1024)
 #else
 #  define BOARD_SDRAM1_SIZE        (32*1024*1024)
@@ -561,9 +561,9 @@
   (GPIO_FMC_SDNWE_3  | GPIO_SPEED_100MHz),  /* PH5 */ \
   (GPIO_FMC_SDNE0_1  | GPIO_SPEED_100MHz),  /* PC2 */ \
   (GPIO_FMC_SDCKE0_3  | GPIO_SPEED_100MHz), /* PH2 */ \
-  (GPIO_FMC_SDCLK_0  | GPIO_SPEED_100MHz)   /* PG8 */    
-  
-  
+  (GPIO_FMC_SDCLK_0  | GPIO_SPEED_100MHz)   /* PG8 */
+
+
 /* LTDC pinout */
 
 /* Control */
@@ -639,7 +639,7 @@
  * PE5 - Button 1
  * PE3 - Button 2
  * PE4 - Button 3
- * PA10 - Button 3 
+ * PA10 - Button 3
  */
 
 #define BUTTON_KEY1                0

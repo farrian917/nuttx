@@ -39,8 +39,8 @@
  * Pre-processor Definitions
  ****************************************************************************/
 
-#ifndef CONFIG_STM32H7_I2C4
-#  error "INA226 support requires CONFIG_STM32H7_I2C4"
+#ifndef CONFIG_STM32_I2C4
+#  error "INA226 support requires CONFIG_STM32_I2C4"
 #endif
 
 #define INA226_I2C_ADDR    0x40 /* VBUS */

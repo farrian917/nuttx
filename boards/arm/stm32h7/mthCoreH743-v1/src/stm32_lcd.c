@@ -39,7 +39,7 @@
 
 #include "mthCoreH743-v1.h"
 
-#ifdef CONFIG_STM32H7_LTDC
+#ifdef CONFIG_STM32_LTDC
 /****************************************************************************
  * Public Functions
  ****************************************************************************/
@@ -67,7 +67,7 @@ int up_fbinitialize(int display)
   stm32_configgpio(GPIO_LCD_PWR_EN);
   stm32_configgpio(GPIO_LCD_BL_PWM);
   stm32_configgpio(GPIO_LCD_NRST);
- 
+
 
   stm32_gpiowrite(GPIO_LCD_PWR_EN, true);
   stm32_gpiowrite(GPIO_LCD_BL_PWM, true);

@@ -57,7 +57,7 @@
 
 /* SD Card */
 
-#if defined(CONFIG_STM32H7_SDMMC1) || defined(CONFIG_STM32H7_SDMMC2)
+#if defined(CONFIG_STM32_SDMMC1) || defined(CONFIG_STM32_SDMMC2)
 #  define HAVE_SDIO
 #endif
 
@@ -123,10 +123,10 @@ int stm32_bringup(void);
  *
  ****************************************************************************/
 
-#ifdef CONFIG_STM32H7_OTGFS
+#ifdef CONFIG_STM32_OTGFS
 void weak_function stm32_usbinitialize(void);
 #else
-//#error You forgot to set CONFIG_STM32H7_OTGFS
+//#error You forgot to set CONFIG_STM32_OTGFS
 #endif
 
 /****************************************************************************
@@ -157,7 +157,7 @@ int stm32_dma_alloc_init(void);
 #ifdef HAVE_SDIO
 int stm32_sdio_initialize(void);
 #else
-//#error You forgot to activate SDIO/MMC 
+//#error You forgot to activate SDIO/MMC
 #endif
 
 /****************************************************************************
@@ -171,7 +171,7 @@ int stm32_sdio_initialize(void);
 #ifdef CONFIG_PWM
 int stm32_pwm_setup(void);
 #else
-//#error You forgot to activate PWM 
+//#error You forgot to activate PWM
 #endif
 
 /****************************************************************************
@@ -182,10 +182,10 @@ int stm32_pwm_setup(void);
  *
  ****************************************************************************/
 
-#ifdef CONFIG_STM32H7_SPI
+#ifdef CONFIG_STM32_SPI
 void stm32_spidev_initialize(void);
 #else
-//#error You forgot to activate SPI 
+//#error You forgot to activate SPI
 #endif
 
 /****************************************************************************
@@ -199,7 +199,7 @@ void stm32_spidev_initialize(void);
 #ifdef CONFIG_MTD_W25QXXXJV
 int stm32_w25qxxx_setup(void);
 #else
-//#error You forgot to set CONFIG_MTD_W25QXXXJV 
+//#error You forgot to set CONFIG_MTD_W25QXXXJV
 #endif
 
 /****************************************************************************
@@ -222,7 +222,7 @@ int stm32_w25qxxx_setup(void);
 #ifdef CONFIG_INPUT_FT5X06
 int stm32_tsc_setup(int minor);
 #else
-//#error You forgot to set CONFIG_INPUT_FT5X06 
+//#error You forgot to set CONFIG_INPUT_FT5X06
 #endif
 
 /****************************************************************************

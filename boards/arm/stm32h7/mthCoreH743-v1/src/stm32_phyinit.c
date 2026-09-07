@@ -89,7 +89,7 @@ static void stm32_emac0_phy_enable(bool enable)
         //stm32_gpiowrite(GPIO_ETH_NRST, 0);
   // up_mdelay(1);
   // stm32_gpiowrite(GPIO_ETH_NRST, 1);
-  // up_mdelay(1);  
+  // up_mdelay(1);
   // stm32_gpiowrite(GPIO_ETH_NRST, 0);
   // up_mdelay(1);
   // stm32_gpiowrite(GPIO_ETH_NRST, 1);
@@ -110,7 +110,7 @@ static void stm32_emac0_phy_enable(bool enable)
  * Public Functions
  ****************************************************************************/
 
-#if defined(CONFIG_ETH0_PHY_DP83848C) && defined(CONFIG_STM32H7_PHYINIT)
+#if defined(CONFIG_ETH0_PHY_DP83848C) && defined(CONFIG_STM32_PHYINIT)
 
 #define STM32_ETHMAC_DEVNAME "eth0"
 
@@ -119,7 +119,7 @@ int stm32_phy_boardinitialize(int intf)
   /* Configure the DP83848C PHY reset pin and take it out of reset */
 
   stm32_configgpio(GPIO_ETH_NRST);
- 
+
   up_mdelay(1);
   stm32_gpiowrite(GPIO_ETH_NRST, 0);
   up_mdelay(1);
@@ -197,7 +197,7 @@ int arch_phy_irq(const char *intf, xcpt_t handler, void *arg, phy_enable_t *enab
   // stm32_gpiowrite(GPIO_ETH_NRST, 0);
   // up_mdelay(1);
   // stm32_gpiowrite(GPIO_ETH_NRST, 1);
-  // up_mdelay(1);  
+  // up_mdelay(1);
   // stm32_gpiowrite(GPIO_ETH_NRST, 0);
   // up_mdelay(1);
   // stm32_gpiowrite(GPIO_ETH_NRST, 1);
