@@ -584,9 +584,9 @@
 
 /* Green */
 #define GPIO_LTDC_G0     (GPIO_LTDC_G0_3 | GPIO_SPEED_100MHz)      /* PJ7 */
-#define GPIO_LTDC_G1     (GPIO_LTDC_G1_3 | GPIO_SPEED_100MHz)      /* PJ8 */
-#define GPIO_LTDC_G2     (GPIO_LTDC_G2_3 | GPIO_SPEED_100MHz)      /* PJ9 */
-#define GPIO_LTDC_G3     (GPIO_LTDC_G3_4 | GPIO_SPEED_100MHz)      /* PJ10 */
+#define GPIO_LTDC_G1     (GPIO_LTDC_G1_2 | GPIO_SPEED_100MHz)      /* PE6 */
+#define GPIO_LTDC_G2     (GPIO_LTDC_G2_1 | GPIO_SPEED_100MHz)      /* PA6 */
+#define GPIO_LTDC_G3     (GPIO_LTDC_G3_6 | GPIO_SPEED_100MHz)      /* PJ12 */
 #define GPIO_LTDC_G4     (GPIO_LTDC_G4_4 | GPIO_SPEED_100MHz)      /* PJ11 */
 #define GPIO_LTDC_G5     (GPIO_LTDC_G5_3 | GPIO_SPEED_100MHz)      /* PK0 */
 #define GPIO_LTDC_G6     (GPIO_LTDC_G6_3 | GPIO_SPEED_100MHz)      /* PK1 */
