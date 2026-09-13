@@ -227,8 +227,8 @@ int stm32_usbhost_initialize(void)
 
       uinfo("Start usbhost_waiter\n");
 
-      ret = kthread_create("usbhost", CONFIG_LINUM_STM32H753BI_USBHOST_PRIO,
-                           CONFIG_LINUM_STM32H753BI_USBHOST_STACKSIZE,
+      ret = kthread_create("usbhost", CONFIG_MTHCOREH743_STM32H743XI_USBHOST_PRIO,
+                           CONFIG_MTHCOREH743_STM32H743XI_USBHOST_STACKSIZE,
                            usbhost_waiter, NULL);
       return ret < 0 ? -ENOEXEC : OK;
     }
@@ -273,7 +273,7 @@ void stm32_usbhost_vbusdrive(int iface, bool enable)
 
   /* Set the Power Switch by driving the active high enable pin */
 
-  stm32_gpiowrite(GPIO_OTGFS_PWRON, enable);
+  //stm32_gpiowrite(GPIO_OTGFS_PWRON, enable);
 }
 #endif
 
@@ -297,7 +297,7 @@ void stm32_usbhost_vbusdrive(int iface, bool enable)
 #ifdef CONFIG_USBHOST
 int stm32_setup_overcurrent(xcpt_t handler, void *arg)
 {
-  return stm32_gpiosetevent(GPIO_OTGFS_OVER, true, true, true, handler, arg);
+  return 0; //stm32_gpiosetevent(GPIO_OTGFS_OVER, true, true, true, handler, arg);
 }
 #endif
 
@@ -318,5 +318,27 @@ void stm32_usbsuspend(struct usbdev_s *dev, bool resume)
   uinfo("resume: %d\n", resume);
 }
 #endif
+
+#ifdef CONFIG_STM32_OTGHS_EXTERNAL_ULPI
+/****************************************************************************
+ * Name:  stm32_usbulpireset
+ *
+ * Description:
+ *   Reset external ULPI.
+ *
+ ****************************************************************************/
+
+void stm32_usbulpireset(struct usbdev_s *dev)
+{
+  // stm32_configgpio(GPIO_ULPI_RESET);
+
+  // up_mdelay(5);
+  // stm32_gpiowrite(GPIO_ULPI_RESET, true);
+  // up_mdelay(10);
+  // stm32_gpiowrite(GPIO_ULPI_RESET, false);
+  // up_mdelay(10);
+}
+#endif
+
 
 #endif /* CONFIG_STM32_OTGFS */

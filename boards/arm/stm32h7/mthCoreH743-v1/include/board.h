@@ -673,6 +673,14 @@
 #define GPIO_ESP32_EN   (GPIO_OUTPUT | GPIO_PUSHPULL | GPIO_SPEED_100MHz | GPIO_OUTPUT_CLEAR | GPIO_PORTJ | GPIO_PIN6) /* PJ6 */
 
 /* USB FS */
+/* The mthCoreH743-v1 board wires the USB connector for host/device use without an
+ * OTG_FS_ID pin (mode is forced by the driver), so PA10 is NOT used as
+ * OTG_FS_ID.  The OTG host driver still configures GPIO_OTGFS_ID
+ * unconditionally, so map it to a harmless floating input instead of the
+ * OTG_FS_ID alternate function to keep PA10 free.
+ */
+
+#define GPIO_OTGFS_ID  (GPIO_INPUT|GPIO_FLOAT|GPIO_PORTA|GPIO_PIN10)
 
 #define GPIO_OTGFS_DM  (GPIO_OTGFS_DM_0|GPIO_SPEED_100MHz) /* PA11 */
 #define GPIO_OTGFS_DP  (GPIO_OTGFS_DP_0|GPIO_SPEED_100MHz) /* PA12 */
