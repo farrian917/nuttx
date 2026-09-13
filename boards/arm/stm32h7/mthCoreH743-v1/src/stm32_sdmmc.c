@@ -33,6 +33,8 @@
 
 #include <nuttx/sdio.h>
 #include <nuttx/mmcsd.h>
+#include <nuttx/fs/fs.h>
+#include <nuttx/fs/partition.h>
 
 #include "stm32_gpio.h"
 #include "stm32_sdmmc.h"
@@ -88,6 +90,23 @@ static struct sdio_dev_s *g_sdio_dev;
 // }
 // #endif
 
+#ifdef CONFIG_GPT_PARTITION
+
+static void mmcsd_partition_handler(FAR struct partition_s *part,
+                                     FAR void *arg)
+{
+  char devname[32];
+
+  snprintf(devname, sizeof(devname), "/dev/mmcsd0p%zu", part->index);
+
+  register_blockpartition(devname, 0660,
+                          "/dev/mmcsd0",
+                          part->firstblock,
+                          part->nblocks);
+}
+
+#endif
+
 /****************************************************************************
  * Public Functions
  ****************************************************************************/
@@ -105,7 +124,7 @@ int stm32_sdio_initialize(void)
   int ret;
 
   /* Delay after board power up*/
-  usleep(100000);  
+  usleep(100000);
 
   finfo("Initializing SDIO slot %d\n", SDIO_SLOTNO);
 
@@ -130,5 +149,23 @@ int stm32_sdio_initialize(void)
 
   finfo("Successfully bound SDIO to the MMC/SD driver\n");
 
+#ifdef CONFIG_GPT_PARTITION
+
+  ret = parse_block_partition("/dev/mmcsd0",
+                              mmcsd_partition_handler,
+                              NULL);
+  if (ret < 0)
+    {
+      syslog(LOG_ERR,
+             "Failed to parse mmcsd0 partition table: %d\n",
+             ret);
+    }
+
+#endif
+
   return OK;
 }
+
+
+
+
