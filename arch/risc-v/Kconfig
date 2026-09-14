@@ -32,7 +32,6 @@ config ARCH_CHIP_K210
 	select ARCH_HAVE_FPU
 	select ARCH_HAVE_DPFPU
 	select ARCH_HAVE_MPU
-	select ARCH_HAVE_TESTSET
 	select ARCH_HAVE_MULTICPU
 	select ARCH_HAVE_MISALIGN_EXCEPTION
 	select ONESHOT
@@ -464,6 +463,7 @@ config ARCH_CHIP_EIC7700X
 	select ARCH_HAVE_DPFPU
 	select ARCH_HAVE_MULTICPU
 	select ARCH_HAVE_MPU
+	select ARCH_DCACHE
 	select ARCH_MMU_TYPE_SV39
 	select ARCH_HAVE_ADDRENV
 	select ARCH_NEED_ADDRENV_MAPPING
@@ -525,7 +525,6 @@ config ARCH_RV_ISA_M
 config ARCH_RV_ISA_A
 	bool
 	default n
-	select ARCH_HAVE_TESTSET
 
 config ARCH_RV_ISA_C
 	bool
@@ -776,6 +775,15 @@ config ARCH_RV_HAVE_APLIC
 		Instead of PLIC, RISC-V also defines Advanced Platform-Level Interrupt
 		Controller (APLIC) to provide flexible interrupt control. This device
 		is not backward compatible with PLIC.
+
+config ARCH_RV_HAVE_CLIC
+	bool
+	default n
+	---help---
+		RISC-V defines Core-Level Interrupt Controller (CLIC) to provide
+		flexible interrupt control. When enabled, CLIC uses interrupt
+		threshold (MINTTHRESH/SINTTHRESH) CSRs for interrupt control
+		instead of the standard IE bit in STATUS register.
 
 config ARCH_RV_EXT_AIA
 	bool "Enable RISC-V SxAIA support"

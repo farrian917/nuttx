@@ -261,6 +261,17 @@ static const char *g_white_prefix[] =
 
   "uxrCustom",           /* uxrCustomTransport */
 
+  /* Ref:  apps/examples/xrcedds
+   * Public type names from the eProsima Micro XRCE-DDS Client and
+   * Micro-CDR APIs.
+   */
+
+  "uxrUDPTransport",     /* uxrUDPTransport */
+  "uxrSession",          /* uxrSession */
+  "uxrStreamId",         /* uxrStreamId */
+  "uxrObjectId",         /* uxrObjectId */
+  "ucdrBuffer",          /* ucdrBuffer */
+
   /* Ref:  arch/arm/src/common/ameba, arch/arm/src/rtl8721dx,
    * arch/arm/src/rtl8720f, arch/arm/src/rtl8721f and the matching boards.
    * Realtek Ameba SDK ROM/HAL symbols and ARM CMSE intrinsics referenced
@@ -303,6 +314,11 @@ static const char *g_white_prefix[] =
   "SystemCoreClock",  /* SystemCoreClock, SystemCoreClockUpdate */
   "cmse_",            /* ARM CMSE TrustZone intrinsics (arm_cmse.h) */
   "MQTTErrors",       /* apps/tools/netutils/mqttc/MQTT-C/include/mqtt.h */
+
+  /* Ref:  apps/netutils/s2opc, apps/examples/s2opc */
+
+  "SOPC_",
+  "OpcUa_",
   NULL
 };
 
@@ -764,6 +780,14 @@ static const char *g_white_content_list[] =
   "xedgeInitDiskIo",
   "xedgeOpenAUX",
   "baParseDate",
+
+  /* Ref:  apps/netutils/s2opc, apps/examples/s2opc */
+
+  "buildBuildDate",
+  "buildDockerId",
+  "buildSrcCommit",
+  "buildVersion",
+  "logSystem",
 
   NULL
 };
