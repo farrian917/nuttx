@@ -44,7 +44,9 @@ if(CONFIG_FAT_DMAMEMORY)
   list(APPEND SRCS stm32_dma_alloc.c)
 endif()
 
-if(CONFIG_STM32_OTGFS)
+
+
+if(CONFIG_STM32_OTGHS)
   list(APPEND SRCS stm32_usb.c)
 endif()
 

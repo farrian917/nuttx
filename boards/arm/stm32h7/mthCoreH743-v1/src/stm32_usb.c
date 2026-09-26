@@ -45,7 +45,7 @@
 #include "stm32_otg.h"
 #include "mthCoreH743-v1.h"
 
-#ifdef CONFIG_STM32_OTGFS
+#if defined(CONFIG_STM32_OTGFS) || defined(CONFIG_STM32_OTGHS)
 
 /****************************************************************************
  * Pre-processor Definitions
@@ -63,7 +63,7 @@
 #endif
 
 #ifndef CONFIG_MTHCOREH743_STM32H743XI_USBHOST_STACKSIZE
-#  define CONFIG_MTHCOREH743_STM32H743XI_USBHOST_STACKSIZE 1024
+#  define CONFIG_MTHCOREH743_STM32H743XI_USBHOST_STACKSIZE 8192
 #endif
 
 /****************************************************************************
@@ -220,7 +220,7 @@ int stm32_usbhost_initialize(void)
   /* Then get an instance of the USB host interface */
 
   uinfo("Initialize USB host\n");
-  g_usbconn = stm32_otgfshost_initialize(0);
+  g_usbconn = stm32_otghshostulpi_initialize(0);
   if (g_usbconn)
     {
       /* Start a thread to handle device connection. */

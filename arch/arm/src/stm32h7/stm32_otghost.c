@@ -60,7 +60,7 @@
 #include "stm32_otg.h"
 #include "stm32_usbhost.h"
 
-#if ((defined(CONFIG_USBHOST) && defined(CONFIG_STM32_OTGFS)) || (defined(CONFIG_USBHOST) && defined(CONFIG_STM32_OTGHS_HOST)))
+#if ((defined(CONFIG_USBHOST) && defined(CONFIG_STM32_OTGFS)) || (defined(CONFIG_USBHOST) && defined(CONFIG_STM32_OTGHS_USBHOST)))
 
 /****************************************************************************
  * Pre-processor Definitions
@@ -76,7 +76,7 @@
 #  define GPIO_OTG_ID           GPIO_OTGFS_ID
 #  define GPIO_OTG_SOF          GPIO_OTGFS_SOF
 #  define STM32_OTG_FIFO_SIZE   4096
-#elif defined(CONFIG_STM32_OTGHS_HOST)
+#elif defined(CONFIG_STM32_OTGHS_USBHOST)
 //#  error OTGHS HOST role not supported yet
 #  define STM32_IRQ_OTG         STM32_IRQ_OTGHS
 #  define STM32_OTG_BASE        STM32_OTGHS_BASE
@@ -84,12 +84,12 @@
 // #  define GPIO_OTG_DP           GPIO_OTGHS_DP
 // #  define GPIO_OTG_ID           GPIO_OTGHS_ID
 // #  define GPIO_OTG_SOF          GPIO_OTGHS_SOF
-#  define STM32_OTG_FIFO_SIZE   4096
+#  define STM32_OTG_FIFO_SIZE   8192
 #else
 #  error Not selected USBDEV peripheral
 #endif
 
-#if defined(CONFIG_STM32_OTGFS_HOST) && defined(CONFIG_STM32_OTGHS_HOST)
+#if defined(CONFIG_STM32_OTGFS_HOST) && defined(CONFIG_STM32_OTGHS_USBHOST)
 #  error Only one HOST role supported
 #endif
 
@@ -1150,7 +1150,7 @@ static void stm32_chan_wakeup(struct stm32_usbhost_s *priv,
                                      OTG_VTRACE2_CHANWAKEUP_OUT,
                           chan->epno, chan->result);
 
-          nxsem_post(&chan->waitsem);
+nxsem_post(&chan->waitsem);
           chan->waiter = false;
         }
 
@@ -1468,27 +1468,27 @@ static void stm32_transfer_start(struct stm32_usbhost_s *priv, int chidx)
            ((uint32_t)chan->pid << OTG_HCTSIZ_DPID_SHIFT);
   stm32_putreg(STM32_OTG_HCTSIZ(chidx), regval);
 
-  /* Setup the HCCHAR register: Frame oddness and host channel enable */
+ /* Setup the HCCHAR register: Frame oddness and host channel enable */
 
-  regval = stm32_getreg(STM32_OTG_HCCHAR(chidx));
+regval = stm32_getreg(STM32_OTG_HCCHAR(chidx));
 
   /* Set/clear the Odd Frame bit.  Check for an even frame; if so set Odd
    * Frame. This field is applicable for only periodic (isochronous and
    * interrupt) channels.
-   */
+     */
 
   if ((stm32_getreg(STM32_OTG_HFNUM) & 1) == 0)
-    {
-      regval |= OTG_HCCHAR_ODDFRM;
-    }
-  else
-    {
-      regval &= ~OTG_HCCHAR_ODDFRM;
-    }
+      {
+        regval |= OTG_HCCHAR_ODDFRM;
+      }
+    else
+      {
+        regval &= ~OTG_HCCHAR_ODDFRM;
+      }
 
   regval &= ~OTG_HCCHAR_CHDIS;
   regval |= OTG_HCCHAR_CHENA;
-  stm32_putreg(STM32_OTG_HCCHAR(chidx), regval);
+    stm32_putreg(STM32_OTG_HCCHAR(chidx), regval);
 
   /* If this is an out transfer, then we need to do more.. we need to copy
    * the outgoing data into the correct TxFIFO.
@@ -1555,7 +1555,7 @@ static void stm32_transfer_start(struct stm32_usbhost_s *priv, int chidx)
           /* Write packet into the Tx FIFO. */
 
           stm32_gint_wrpacket(priv, chan->buffer, chidx, wrsize);
-        }
+         }
 
       /* Did we put the entire buffer into the Tx FIFO? */
 
@@ -2027,21 +2027,21 @@ static void stm32_in_next(struct stm32_usbhost_s *priv,
   /* Is the full transfer complete? Did the last chunk transfer OK? */
 
   result = -(int)chan->result;
-  if (chan->xfrd < chan->buflen && result == OK)
-    {
+if (chan->xfrd < chan->buflen && result == OK)
+  {
       /* Yes.. Set up for the next transfer based on the direction and the
        * endpoint type
        */
 
-      ret = stm32_in_setup(priv, chan->chidx);
-      if (ret >= 0)
-        {
-          return;
-        }
+    ret = stm32_in_setup(priv, chan->chidx);
+    if (ret >= 0)
+      {
+        return;
+      }
 
-      uerr("ERROR: stm32_in_setup failed: %d\n", ret);
-      result = ret;
-    }
+    uerr("ERROR: stm32_in_setup failed: %d\n", ret);
+    result = ret;
+  }
 
   /* The transfer is complete, with or without an error */
 
@@ -2535,11 +2535,11 @@ static inline void stm32_gint_hcinisr(struct stm32_usbhost_s *priv,
     {
       /* Halt the channel -- the CHH interrupt is expected next */
 
-      stm32_chan_halt(priv, chidx, CHREASON_FRMOR);
+    stm32_chan_halt(priv, chidx, CHREASON_FRMOR);
 
       /* Clear the FRaMe OverRun (FRMOR) condition */
 
-      stm32_putreg(STM32_OTG_HCINT(chidx), OTG_HCINT_FRMOR);
+    stm32_putreg(STM32_OTG_HCINT(chidx), OTG_HCINT_FRMOR);
     }
 
   /* Check for a pending TransFeR Completed (XFRC) interrupt */
@@ -2620,7 +2620,7 @@ static inline void stm32_gint_hcinisr(struct stm32_usbhost_s *priv,
         {
           /* Set the frame overrun error result */
 
-          chan->result = EPIPE;
+        chan->result = EPIPE;
         }
 
       /* Clear the CHannel Halted (CHH) condition */
@@ -2912,7 +2912,7 @@ static inline void stm32_gint_hcoutisr(struct stm32_usbhost_s *priv,
         {
           /* Set the frame error result */
 
-          chan->result = EPIPE;
+        chan->result = EPIPE;
         }
 
       /* Clear the pending the CHannel Halted (CHH) interrupt */
@@ -3480,7 +3480,7 @@ static inline void stm32_gint_hprtisr(struct stm32_usbhost_s *priv)
                   stm32_portreset(priv);
                 }
             }
-#ifdef CONFIG_STM32_OTGHS_HOST
+#ifdef CONFIG_STM32_OTGHS_USBHOST
 else if ((hprt & OTG_HPRT_PSPD_MASK) == OTG_HPRT_PSPD_HS)
   {
     uinfo("USB OTG HS: High-speed device connected\n");
@@ -3580,7 +3580,7 @@ static int stm32_gint_isr(int irq, void *context, void *arg)
 
       if (pending == 0)
         {
-          return OK;
+    return OK;
         }
 
       /* Otherwise, process each pending, unmasked GINT interrupts */
@@ -3983,7 +3983,7 @@ static int stm32_rh_enumerate(struct stm32_usbhost_s *priv,
     {
       priv->rhport.hport.speed = USB_SPEED_FULL;
     }
-#ifdef CONFIG_STM32_OTGHS_HOST
+#ifdef CONFIG_STM32_OTGHS_USBHOST
 else if ((regval & OTG_HPRT_PSPD_MASK) == OTG_HPRT_PSPD_HS)
   {
     priv->rhport.hport.speed = USB_SPEED_HIGH;
@@ -5461,7 +5461,7 @@ uinfo("USBHS HPRT=%08" PRIx32 "\n",
  *   Otherwise, there is a race condition if the device is already connected.
  *
  ****************************************************************************/
-
+#ifdef CONFIG_STM32_OTGFS_HOST
 struct usbhost_connection_s *stm32_otgfshost_initialize(int controller)
 {
   /* At present, there is only support for a single OTG FS host. Hence it is
@@ -5536,7 +5536,7 @@ struct usbhost_connection_s *stm32_otgfshost_initialize(int controller)
 
   /* SOF output pin configuration is configurable */
 
-#if defined(CONFIG_STM32_OTG_SOFOUTPUT) && (!defined(CONFIG_STM32_OTGHS_HOST))
+#if defined(CONFIG_STM32_OTG_SOFOUTPUT) && (!defined(CONFIG_STM32_OTGHS_USBHOST))
   stm32_configgpio(GPIO_OTG_SOF);
 #endif
 
@@ -5561,6 +5561,8 @@ struct usbhost_connection_s *stm32_otgfshost_initialize(int controller)
   up_enable_irq(STM32_IRQ_OTG);
   return &g_usbconn;
 }
+
+#endif
 
 struct usbhost_connection_s *stm32_otghshostulpi_initialize(int controller)
 {
@@ -5645,7 +5647,7 @@ struct usbhost_connection_s *stm32_otghshostulpi_initialize(int controller)
 
   /* SOF output pin configuration is configurable */
 
-#if defined(CONFIG_STM32_OTG_SOFOUTPUT) && (!defined(CONFIG_STM32_OTGHS_HOST))
+#if defined(CONFIG_STM32_OTG_SOFOUTPUT) && (!defined(CONFIG_STM32_OTGHS_USBHOST))
   stm32_configgpio(GPIO_OTG_SOF);
 #endif
 

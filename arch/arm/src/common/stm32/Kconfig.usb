@@ -133,13 +133,17 @@ config STM32_OTGFS_HOST
 endchoice # "STM32H7 OTGFS role"
 
 choice
-	prompt "STM32H7 OTGHS role (only USBDEV supported for now)"
+	prompt "STM32H7 OTGHS role (USBHOST expiremental)"
 	depends on STM32_OTGHS
 	default STM32_OTGHS_USBDEV if USBDEV
 
 config STM32_OTGHS_USBDEV
 	bool "OTGHS as USBDEV"
 	depends on USBDEV
+
+config STM32_OTGHS_USBHOST
+	bool "OTGHS as USBHOST"
+	depends on USBHOST
 
 endchoice # "STM32H7 OTGHS role"
 

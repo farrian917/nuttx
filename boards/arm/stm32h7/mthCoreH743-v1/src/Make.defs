@@ -46,7 +46,7 @@ ifeq ($(CONFIG_FAT_DMAMEMORY),y)
 CSRCS += stm32_dma_alloc.c
 endif
 
-ifeq ($(CONFIG_STM32_OTGFS),y)
+ifeq ($(CONFIG_STM32_OTGHS),y)
 CSRCS += stm32_usb.c
 endif
 
