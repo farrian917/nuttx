@@ -60,7 +60,7 @@
 #include "stm32_otg.h"
 #include "stm32_usbhost.h"
 
-#if defined(CONFIG_USBHOST) && defined(CONFIG_STM32_OTGFS)
+#if ((defined(CONFIG_USBHOST) && defined(CONFIG_STM32_OTGFS)) || (defined(CONFIG_USBHOST) && defined(CONFIG_STM32_OTGHS_HOST)))
 
 /****************************************************************************
  * Pre-processor Definitions
@@ -77,13 +77,13 @@
 #  define GPIO_OTG_SOF          GPIO_OTGFS_SOF
 #  define STM32_OTG_FIFO_SIZE   4096
 #elif defined(CONFIG_STM32_OTGHS_HOST)
-#  error OTGHS HOST role not supported yet
+//#  error OTGHS HOST role not supported yet
 #  define STM32_IRQ_OTG         STM32_IRQ_OTGHS
 #  define STM32_OTG_BASE        STM32_OTGHS_BASE
-#  define GPIO_OTG_DM           GPIO_OTGHS_DM
-#  define GPIO_OTG_DP           GPIO_OTGHS_DP
-#  define GPIO_OTG_ID           GPIO_OTGHS_ID
-#  define GPIO_OTG_SOF          GPIO_OTGHS_SOF
+// #  define GPIO_OTG_DM           GPIO_OTGHS_DM
+// #  define GPIO_OTG_DP           GPIO_OTGHS_DP
+// #  define GPIO_OTG_ID           GPIO_OTGHS_ID
+// #  define GPIO_OTG_SOF          GPIO_OTGHS_SOF
 #  define STM32_OTG_FIFO_SIZE   4096
 #else
 #  error Not selected USBDEV peripheral
@@ -3458,7 +3458,7 @@ static inline void stm32_gint_hprtisr(struct stm32_usbhost_s *priv)
                   stm32_portreset(priv);
                 }
             }
-          else /* if ((hprt & OTG_HPRT_PSPD_MASK) == OTG_HPRT_PSPD_FS) */
+          else if ((hprt & OTG_HPRT_PSPD_MASK) == OTG_HPRT_PSPD_FS)
             {
               usbhost_vtrace1(OTG_VTRACE1_GINT_HPRT_FSDEV, 0);
               stm32_putreg(STM32_OTG_HFIR, 48000);
@@ -3480,6 +3480,12 @@ static inline void stm32_gint_hprtisr(struct stm32_usbhost_s *priv)
                   stm32_portreset(priv);
                 }
             }
+#ifdef CONFIG_STM32_OTGHS_HOST
+else if ((hprt & OTG_HPRT_PSPD_MASK) == OTG_HPRT_PSPD_HS)
+  {
+    uinfo("USB OTG HS: High-speed device connected\n");
+  }
+#endif
         }
     }
 
@@ -3973,10 +3979,21 @@ static int stm32_rh_enumerate(struct stm32_usbhost_s *priv,
     {
       priv->rhport.hport.speed = USB_SPEED_LOW;
     }
-  else
+  else if ((regval & OTG_HPRT_PSPD_MASK) == OTG_HPRT_PSPD_FS)
     {
       priv->rhport.hport.speed = USB_SPEED_FULL;
     }
+#ifdef CONFIG_STM32_OTGHS_HOST
+else if ((regval & OTG_HPRT_PSPD_MASK) == OTG_HPRT_PSPD_HS)
+  {
+    priv->rhport.hport.speed = USB_SPEED_HIGH;
+  }
+  else
+  {
+    uerr("ERROR: Invalid USB speed: HPRT=%08" PRIx32 "\n", regval);
+    return -EIO;
+  }
+#endif
 
   /* Allocate and initialize the root hub port EP0 channels */
 
@@ -3986,6 +4003,8 @@ static int stm32_rh_enumerate(struct stm32_usbhost_s *priv,
     {
       uerr("ERROR: Failed to allocate a control endpoint: %d\n", ret);
     }
+
+    uinfo("USB device speed: %u HPRT=%08" PRIx32 "\n", priv->rhport.hport.speed, regval);
 
   return ret;
 }
@@ -5293,6 +5312,30 @@ static inline int stm32_hw_initialize(struct stm32_usbhost_s *priv)
   uint32_t regval;
   unsigned long timeout;
 
+  #ifdef CONFIG_STM32_OTGHS_EXTERNAL_ULPI
+
+  /* Select external ULPI PHY */
+
+  regval = stm32_getreg(STM32_OTG_GUSBCFG);
+
+  regval &= ~OTG_GUSBCFG_PHYSEL;
+
+/* Configure ULPI-related GUSBCFG bits as required */
+
+#ifdef CONFIG_STM32_OTGHS_FS
+  /* ULPI PHY operated at Full Speed */
+
+  regval |= OTG_GUSBCFG_ULPIFSL;
+#else
+  /* Normal HS ULPI operation */
+
+  regval &= ~OTG_GUSBCFG_ULPIFSL;
+#endif
+
+stm32_putreg(STM32_OTG_GUSBCFG, regval);
+
+  #else
+
   /* Set the PHYSEL bit in the GUSBCFG register to select the OTG FS serial
    * transceiver: "This bit is always 1 with write-only access"
    */
@@ -5300,6 +5343,8 @@ static inline int stm32_hw_initialize(struct stm32_usbhost_s *priv)
   regval = stm32_getreg(STM32_OTG_GUSBCFG);
   regval |= OTG_GUSBCFG_PHYSEL;
   stm32_putreg(STM32_OTG_GUSBCFG, regval);
+
+  #endif
 
   /* Reset after a PHY select and set Host mode.  First, wait for AHB master
    * IDLE state.
@@ -5332,8 +5377,26 @@ static inline int stm32_hw_initialize(struct stm32_usbhost_s *priv)
   up_udelay(3);
 
   /* Deactivate the power down */
+  regval = stm32_getreg(STM32_OTG_GCCFG);
 
-  regval  = (OTG_GCCFG_PWRDWN | OTG_GCCFG_VBDEN);
+#ifdef CONFIG_STM32_OTGHS_EXTERNAL_ULPI
+  /*
+   * External ULPI PHY.
+   * PWRDWN controls the internal FS transceiver, so don't enable it.
+   */
+  regval &= ~OTG_GCCFG_PWRDWN;
+#else
+  /* Internal FS PHY */
+  regval |= OTG_GCCFG_PWRDWN;
+#endif
+
+#ifdef CONFIG_USBHOST_VBUSSENSING
+  regval |= OTG_GCCFG_VBDEN;
+#else
+  regval &= ~OTG_GCCFG_VBDEN;
+#endif
+
+  //regval  = (OTG_GCCFG_PWRDWN | OTG_GCCFG_VBDEN);
   stm32_putreg(STM32_OTG_GCCFG, regval);
   up_mdelay(20);
 
@@ -5352,6 +5415,21 @@ static inline int stm32_hw_initialize(struct stm32_usbhost_s *priv)
   /* Initialize host mode and return success */
 
   stm32_host_initialize(priv);
+
+  uinfo("USBHS GUSBCFG=%08" PRIx32 "\n",
+      stm32_getreg(STM32_OTG_GUSBCFG));
+uinfo("USBHS GCCFG=%08" PRIx32 "\n",
+      stm32_getreg(STM32_OTG_GCCFG));
+uinfo("USBHS GAHBCFG=%08" PRIx32 "\n",
+      stm32_getreg(STM32_OTG_GAHBCFG));
+uinfo("USBHS GINTSTS=%08" PRIx32 "\n",
+      stm32_getreg(STM32_OTG_GINTSTS));
+uinfo("USBHS HCFG=%08" PRIx32 "\n",
+      stm32_getreg(STM32_OTG_HCFG));
+uinfo("USBHS HFIR=%08" PRIx32 "\n",
+      stm32_getreg(STM32_OTG_HFIR));
+uinfo("USBHS HPRT=%08" PRIx32 "\n",
+      stm32_getreg(STM32_OTG_HPRT));
   return OK;
 }
 
@@ -5458,7 +5536,116 @@ struct usbhost_connection_s *stm32_otgfshost_initialize(int controller)
 
   /* SOF output pin configuration is configurable */
 
-#ifdef CONFIG_STM32_OTG_SOFOUTPUT
+#if defined(CONFIG_STM32_OTG_SOFOUTPUT) && (!defined(CONFIG_STM32_OTGHS_HOST))
+  stm32_configgpio(GPIO_OTG_SOF);
+#endif
+
+  /* Initialize the USB OTG FS core */
+
+  stm32_hw_initialize(priv);
+
+  /* Attach USB host controller interrupt handler */
+
+  if (irq_attach(STM32_IRQ_OTG, stm32_gint_isr, NULL) != 0)
+    {
+      usbhost_trace1(OTG_TRACE1_IRQATTACH, 0);
+      return NULL;
+    }
+
+  /* Enable USB OTG FS global interrupts */
+
+  stm32_gint_enable();
+
+  /* Enable interrupts at the interrupt controller */
+
+  up_enable_irq(STM32_IRQ_OTG);
+  return &g_usbconn;
+}
+
+struct usbhost_connection_s *stm32_otghshostulpi_initialize(int controller)
+{
+
+  struct stm32_usbhost_s *priv = &g_usbhost;
+  uint32_t regval;
+
+  /* Sanity checks */
+
+  DEBUGASSERT(controller == 0);
+
+  /* Make sure that interrupts from the OTG FS core are disabled */
+
+  stm32_gint_disable();
+
+  /* Reset the state of the host driver */
+
+  stm32_sw_initialize(priv);
+
+  /* Configure USB voltage regulator */
+
+  regval = stm32_getreg(STM32_PWR_CR3);
+
+  /* Enable USB regulator if configured */
+
+#ifdef CONFIG_STM32_OTG_USBREGEN
+  regval |= STM32_PWR_CR3_USBREGEN;
+#else
+  regval &= ~STM32_PWR_CR3_USBREGEN;
+#endif
+
+  /* Enable VDD33USB supply level detector */
+
+  regval |= STM32_PWR_CR3_USB33DEN;
+  stm32_putreg(STM32_PWR_CR3, regval);
+
+  while ((stm32_getreg(STM32_PWR_CR3) & STM32_PWR_CR3_USB33RDY) == 0)
+    {
+    }
+
+  /* Alternate function pin configuration.  Here we assume that:
+   *
+   * 1. GPIOA, SYSCFG, and OTG FS peripheral clocking have already been
+   *    enabled as part of the boot sequence.
+   * 2. Board-specific logic has already enabled other board specific GPIOs
+   *    for things like soft pull-up, VBUS sensing, power controls, and over-
+   *    current detection.
+   */
+
+  /* Configure OTG FS alternate function pins for DM, DP, ID, and SOF.
+   *
+   * PIN* SIGNAL      DIRECTION
+   * ---- ----------- ----------
+   * PA8  OTG_FS_SOF  SOF clock output
+   * PA9  OTG_FS_VBUS VBUS input for device, Driven by external regulator by
+   *                  host (not an alternate function)
+   * PA10 OTG_FS_ID   OTG ID pin (only needed in Dual mode)
+   * PA11 OTG_FS_DM   D- I/O
+   * PA12 OTG_FS_DP   D+ I/O
+   *
+   * *Pins may vary from device-to-device.
+   */
+
+  /* Configure ULPI alternate function pins */
+
+  stm32_configgpio(GPIO_OTG_HS_ULPI_CK);
+  stm32_configgpio(GPIO_OTG_HS_ULPI_D0);
+  stm32_configgpio(GPIO_OTG_HS_ULPI_D1);
+  stm32_configgpio(GPIO_OTG_HS_ULPI_D2);
+  stm32_configgpio(GPIO_OTG_HS_ULPI_D3);
+  stm32_configgpio(GPIO_OTG_HS_ULPI_D4);
+  stm32_configgpio(GPIO_OTG_HS_ULPI_D5);
+  stm32_configgpio(GPIO_OTG_HS_ULPI_D6);
+  stm32_configgpio(GPIO_OTG_HS_ULPI_D7);
+  stm32_configgpio(GPIO_OTG_HS_ULPI_DIR);
+  stm32_configgpio(GPIO_OTG_HS_ULPI_NXT);
+  stm32_configgpio(GPIO_OTG_HS_ULPI_STP);
+
+  /* Reset external ULPI */
+
+  //stm32_usbulpireset((struct usbdev_s *) priv);
+
+  /* SOF output pin configuration is configurable */
+
+#if defined(CONFIG_STM32_OTG_SOFOUTPUT) && (!defined(CONFIG_STM32_OTGHS_HOST))
   stm32_configgpio(GPIO_OTG_SOF);
 #endif
 
