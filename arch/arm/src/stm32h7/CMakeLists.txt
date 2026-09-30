@@ -161,6 +161,10 @@ if(CONFIG_STM32_LTDC)
   list(APPEND SRCS stm32_ltdc.c)
 endif()
 
+if(CONFIG_STM32_DMA2D)
+  list(APPEND SRCS stm32_dma2d.c)
+endif()
+
 if(CONFIG_USBDEV)
   list(APPEND SRCS stm32_otgdev.c)
 endif()
