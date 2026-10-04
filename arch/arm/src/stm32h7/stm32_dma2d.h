@@ -187,5 +187,15 @@ int stm32_dma2dinitialize(void);
 
 void stm32_dma2duninitialize(void);
 
+#ifdef CONFIG_STM32_DMA2D_L8
+int stm32_dma2d_l8rgb888(FAR const uint8_t *src,
+                         uint32_t srcstride,
+                         FAR void *dst,
+                         uint32_t dststride,
+                         uint16_t width,
+                         uint16_t height,
+                         FAR const uint32_t *clut);
+#endif
+
 #endif /* CONFIG_FB_OVERLAY */
 #endif /* __ARCH_ARM_SRC_STM32H7_STM32_DMA2D_H */

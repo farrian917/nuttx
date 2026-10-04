@@ -192,7 +192,7 @@ static void stm32_dma2d_control(uint32_t setbits, uint32_t clrbits);
 static int stm32_dma2dirq(int irq, void *context, void *arg);
 static int stm32_dma2d_waitforirq(void);
 static int stm32_dma2d_start(void);
-#ifdef CONFIG_STM32_FB_CMAP
+#ifdef CONFIG_STM32_DMA2D_L8
 static int stm32_dma2d_loadclut(uintptr_t reg);
 #endif
 static uint32_t
@@ -1165,3 +1165,138 @@ struct dma2d_layer_s *stm32_dma2ddev(void)
 {
   return &g_dma2ddev.dma2d;
 }
+
+/****************************************************************************
+ * Name: stm32_dma2d_l8rgb888
+ *
+ * Description:
+ *   Convert L8 indexed image to RGB888 using DMA2D M2M_PFC and a
+ *   256-entry ARGB8888 CLUT.
+ *
+ *   srcstride - source stride in bytes
+ *   dststride - destination stride in bytes
+ *   clut      - 256 entries, 0xAARRGGBB
+ *
+ ****************************************************************************/
+#ifdef CONFIG_STM32_DMA2D_L8
+
+int stm32_dma2d_l8rgb888(FAR const uint8_t *src,
+                         uint32_t srcstride,
+                         FAR void *dst,
+                         uint32_t dststride,
+                         uint16_t width,
+                         uint16_t height,
+                         FAR const uint32_t *clut)
+{
+  struct stm32_dma2d_s *priv = &g_dma2ddev;
+  uint32_t pfccr;
+  uint32_t src_offset;
+  uint32_t dst_offset;
+  int ret;
+
+  if (src == NULL || dst == NULL || clut == NULL ||
+      width == 0 || height == 0)
+    {
+      return -EINVAL;
+    }
+
+  /* L8 source = 1 byte/pixel
+   * RGB888 destination = 3 bytes/pixel
+   */
+
+  if (srcstride < width ||
+      dststride < (uint32_t)width * 3)
+    {
+      return -EINVAL;
+    }
+
+  /* DMA2D FGOR/OOR are expressed in pixels, not bytes. */
+
+  src_offset = srcstride - width;
+  dst_offset = (dststride / 3) - width;
+
+  nxmutex_lock(priv->lock);
+
+  /* ----------------------------------------------------------
+   * Foreground/source
+   * ---------------------------------------------------------- */
+
+  putreg32((uint32_t)(uintptr_t)src,
+           STM32_DMA2D_FGMAR);
+
+  putreg32(src_offset,
+           STM32_DMA2D_FGOR);
+
+  /* ----------------------------------------------------------
+   * L8 CLUT
+   *
+   * CLUT entries are ARGB8888:
+   *
+   *     0xAARRGGBB
+   *
+   * CCM = 0 selects ARGB8888 CLUT.
+   * ---------------------------------------------------------- */
+
+  putreg32((uint32_t)(uintptr_t)clut,
+           STM32_DMA2D_FGCMAR);
+
+  pfccr = DMA2D_XGPFCCR_CM(DMA2D_PF_L8) |
+          DMA2D_XGPFCCR_CS(255);
+
+  putreg32(pfccr,
+           STM32_DMA2D_FGPFCCR);
+
+  /* Load the 256-entry CLUT and wait for CTCIF. */
+
+  ret = stm32_dma2d_loadclut(STM32_DMA2D_FGPFCCR);
+  if (ret != OK)
+    {
+      nxmutex_unlock(priv->lock);
+      return ret;
+    }
+
+  /* ----------------------------------------------------------
+   * Output/destination
+   * ---------------------------------------------------------- */
+
+  putreg32((uint32_t)(uintptr_t)dst,
+           STM32_DMA2D_OMAR);
+
+  putreg32(dst_offset,
+           STM32_DMA2D_OOR);
+
+  /* RGB888 output */
+
+  putreg32(DMA2D_OPFCCR_CM(DMA2D_PF_RGB888),
+           STM32_DMA2D_OPFCCR);
+
+  /* ----------------------------------------------------------
+   * Number of pixels/lines
+   * ---------------------------------------------------------- */
+
+  putreg32(DMA2D_NLR_PL(width) |
+           DMA2D_NLR_NL(height),
+           STM32_DMA2D_NLR);
+
+  /* ----------------------------------------------------------
+   * M2M with pixel-format conversion
+   * ---------------------------------------------------------- */
+
+  stm32_dma2d_control(STM32_DMA2D_CR_MODE_BLITPFC,
+                      STM32_DMA2D_CR_MODE_CLEAR);
+
+  /* Start transfer and wait for TCIF. */
+
+  ret = stm32_dma2d_start();
+
+  if (ret != OK)
+    {
+      ret = -ECANCELED;
+    }
+
+  nxmutex_unlock(priv->lock);
+
+  return ret;
+}
+
+#endif /* CONFIG_STM32_DMA2D_L8 */
