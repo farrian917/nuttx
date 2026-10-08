@@ -188,6 +188,26 @@ int stm32_dma2dinitialize(void);
 void stm32_dma2duninitialize(void);
 
 #ifdef CONFIG_STM32_DMA2D_L8
+  /* Name: stm32_dma2d_l8rgb888
+   *
+   * Description:
+   *   Convert L8 indexed image to RGB888 using DMA2D M2M_PFC and a
+   *   256-entry ARGB8888 CLUT.
+   *
+   * Parameter:
+   *   src -
+   *   srcstride - source stride in bytes
+   *   dst -
+   *   foverlay -
+   *   dststride - destination stride in bytes
+   *   width - width
+   *   height - height
+   *   clut    - 256 entries, 0xAARRGGBB
+   *
+   * Returned Value:
+   *   On success - OK
+   *   On error   - -EINVAL or -ECANCELED or -EINTR
+   */
 int stm32_dma2d_l8rgb888(FAR const uint8_t *src,
                          uint32_t srcstride,
                          FAR void *dst,
