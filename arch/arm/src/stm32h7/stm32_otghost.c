@@ -76,14 +76,17 @@
 #  define GPIO_OTG_ID           GPIO_OTGFS_ID
 #  define GPIO_OTG_SOF          GPIO_OTGFS_SOF
 #  define STM32_OTG_FIFO_SIZE   4096
-#elif defined(CONFIG_STM32_OTGHS_USBHOST)
-//#  error OTGHS HOST role not supported yet
+#elif defined(CONFIG_STM32_OTGHS_USBHOST) && !defined(CONFIG_STM32_OTGHS_EXTERNAL_ULPI)
 #  define STM32_IRQ_OTG         STM32_IRQ_OTGHS
 #  define STM32_OTG_BASE        STM32_OTGHS_BASE
-// #  define GPIO_OTG_DM           GPIO_OTGHS_DM
-// #  define GPIO_OTG_DP           GPIO_OTGHS_DP
-// #  define GPIO_OTG_ID           GPIO_OTGHS_ID
-// #  define GPIO_OTG_SOF          GPIO_OTGHS_SOF
+#  define GPIO_OTG_DM           GPIO_OTGHS_DM
+#  define GPIO_OTG_DP           GPIO_OTGHS_DP
+#  define GPIO_OTG_ID           GPIO_OTGHS_ID
+#  define GPIO_OTG_SOF          GPIO_OTGHS_SOF
+#  define STM32_OTG_FIFO_SIZE   8192
+#elif defined(CONFIG_STM32_OTGHS_USBHOST) && defined(CONFIG_STM32_OTGHS_EXTERNAL_ULPI)
+#  define STM32_IRQ_OTG         STM32_IRQ_OTGHS
+#  define STM32_OTG_BASE        STM32_OTGHS_BASE
 #  define STM32_OTG_FIFO_SIZE   8192
 #else
 #  error Not selected USBDEV peripheral
