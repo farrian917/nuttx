@@ -220,7 +220,7 @@ int stm32_usbhost_initialize(void)
   /* Then get an instance of the USB host interface */
 
   uinfo("Initialize USB host\n");
-  g_usbconn = stm32_otghshostulpi_initialize(0);
+  g_usbconn = stm32_otghostulpi_initialize(0);
   if (g_usbconn)
     {
       /* Start a thread to handle device connection. */

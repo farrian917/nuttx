@@ -5564,7 +5564,9 @@ struct usbhost_connection_s *stm32_otgfshost_initialize(int controller)
 
 #endif
 
-struct usbhost_connection_s *stm32_otghshostulpi_initialize(int controller)
+#ifdef CONFIG_STM32_OTGHS_USBHOST
+
+struct usbhost_connection_s *stm32_otghostulpi_initialize(int controller)
 {
 
   struct stm32_usbhost_s *priv = &g_usbhost;
@@ -5672,5 +5674,6 @@ struct usbhost_connection_s *stm32_otghshostulpi_initialize(int controller)
   up_enable_irq(STM32_IRQ_OTG);
   return &g_usbconn;
 }
+#endif
 
 #endif /* CONFIG_USBHOST && CONFIG_STM32_OTGFS */
