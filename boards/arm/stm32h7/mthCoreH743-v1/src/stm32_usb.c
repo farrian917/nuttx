@@ -217,6 +217,14 @@ int stm32_usbhost_initialize(void)
     }
 #endif
 
+#ifdef CONFIG_USBHOST_XBOXCONTROLLER
+  ret = usbhost_xboxcontroller_init();
+  if (ret < 0)
+  {
+    syslog(LOG_ERR, "Xbox registration failed: %d\n", ret);
+  }
+#endif
+
   /* Then get an instance of the USB host interface */
 
   uinfo("Initialize USB host\n");

@@ -79,7 +79,7 @@ struct xbox_controller_buttonstate_s
 enum
 {
   XBOX_CONTROLLER_IOCTL_RUMBLE
-} xbox_controller_iotcl_cmds;
+};
 
 #ifdef __cplusplus
 }

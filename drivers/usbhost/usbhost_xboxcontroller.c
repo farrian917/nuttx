@@ -25,6 +25,7 @@
  ****************************************************************************/
 
 #include <nuttx/config.h>
+#include <sched.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -47,6 +48,7 @@
 #include <nuttx/usb/usb.h>
 #include <nuttx/usb/usbhost.h>
 #include <nuttx/input/xbox-controller.h>
+#include <nuttx/input/keyboard.h>
 
 /****************************************************************************
  * Pre-processor Definitions
@@ -78,6 +80,9 @@
 
 #define DEV_FORMAT          "/dev/xbox%c"
 #define DEV_NAMELEN         11
+#define XBOX_KBD_FORMAT     "/dev/xboxkbd%c"
+#define XBOX_KBD_NAMELEN    16
+#define XBOX_KBD_BUFSIZE    64
 
 /* Used in usbhost_cfgdesc() */
 
@@ -149,6 +154,9 @@ struct usbhost_state_s
   /* This is the externally visible portion of the state */
 
   struct usbhost_class_s  usbclass;
+  struct keyboard_lowerhalf_s lower;
+  bool kbd_registered;
+  uint16_t kbd_previous;
 
   /* The remainder of the fields are provide to the class driver */
 
@@ -196,6 +204,11 @@ static int usbhost_allocdevno(FAR struct usbhost_state_s *priv);
 static void usbhost_freedevno(FAR struct usbhost_state_s *priv);
 static inline void usbhost_mkdevname(FAR struct usbhost_state_s *priv,
                                      FAR char *devname);
+
+/* Xbox-to-keyboard translation */
+
+static void xbox_keyboard_report(FAR struct usbhost_state_s *priv,
+                                 FAR const uint8_t *report);
 
 /* Worker thread actions */
 
@@ -458,6 +471,15 @@ static void usbhost_destroy(FAR void *arg)
 
   uinfo("Unregister driver\n");
   usbhost_mkdevname(priv, devname);
+  if (priv->kbd_registered)
+    {
+      char kbdname[XBOX_KBD_NAMELEN];
+      snprintf(kbdname, sizeof(kbdname), XBOX_KBD_FORMAT,
+               priv->devchar);
+      keyboard_unregister(&priv->lower, kbdname);
+      priv->kbd_registered = false;
+    }
+
   unregister_driver(devname);
 
   /* Release the device name used by this connection */
@@ -507,6 +529,152 @@ static void usbhost_destroy(FAR void *arg)
  *   None
  *
  ****************************************************************************/
+
+/* Generate one event per changed button, including key releases.
+ * Special keys MUST use the special event types.
+ */
+
+// static void xbox_keyboard_report(FAR struct usbhost_state_s *priv,
+//                                  FAR const uint8_t *report)
+// {
+//   static const struct
+//   {
+//     uint16_t mask;
+//     uint32_t code;
+//     bool special;
+//   } keys[] =
+//   {
+//     {1u << 2,  27,               false}, /* START -> Escape */
+//     {1u << 3,  8,                false}, /* BACK  -> Backspace */
+//     {1u << 4,  '\r',             false}, /* A     -> Enter */
+//     {1u << 5,  ' ',              false}, /* B     -> Space */
+//     {1u << 6,  KEYCODE_LCTRL,    true }, /* X     -> Ctrl */
+//     {1u << 7,  KEYCODE_LSHIFT,   true }, /* Y     -> Shift */
+//     {1u << 8,  KEYCODE_UP,       true }, /* D-pad up */
+//     {1u << 9,  KEYCODE_DOWN,     true }, /* D-pad down */
+//     {1u << 10, KEYCODE_LEFT,     true }, /* D-pad left */
+//     {1u << 11, KEYCODE_RIGHT,    true }  /* D-pad right */
+//   };
+//   uint16_t now;
+//   uint16_t changes;
+//   unsigned int i;
+
+//   now = (uint16_t)report[4] | ((uint16_t)report[5] << 8);
+//   changes = now ^ priv->kbd_previous;
+//   priv->kbd_previous = now;
+
+//   if (!priv->kbd_registered)
+//     {
+//       return;
+//     }
+
+//   // for (i = 0; i < sizeof(keys) / sizeof(keys[0]); i++)
+//   //   {
+//   //     if ((changes & keys[i].mask) != 0)
+//   //       {
+//   //         bool pressed = (now & keys[i].mask) != 0;
+//   //         keyboard_event(&priv->lower, keys[i].code,
+//   //                        keys[i].special ?
+//   //                          (pressed ? KEYBOARD_SPECPRESS : KEYBOARD_SPECREL) :
+//   //                          (pressed ? KEYBOARD_PRESS : KEYBOARD_RELEASE));
+//   //       }
+//   //   }
+//   for (i = 0; i < sizeof(keys) / sizeof(keys[0]); i++)
+//   {
+//     if ((changes & keys[i].mask) != 0)
+//       {
+//         bool pressed = (now & keys[i].mask) != 0;
+//         int event = keys[i].special ?
+//                     (pressed ? KEYBOARD_SPECPRESS :
+//                                KEYBOARD_SPECREL) :
+//                     (pressed ? KEYBOARD_PRESS :
+//                                KEYBOARD_RELEASE);
+
+//         printf("XBOX KBD: code=%lu event=%d %s\n",
+//                (unsigned long)keys[i].code,
+//                event,
+//                pressed ? "PRESS" : "RELEASE");
+
+//         keyboard_event(&priv->lower, keys[i].code, event);
+//       }
+
+//       printf("XBOX STATE: now=%04x prev=%04x changes=%04x registered=%d\n",
+//        now,
+//        priv->kbd_previous,
+//        changes,
+//        priv->kbd_registered);
+//   }
+
+
+// }
+
+static void xbox_keyboard_report(FAR struct usbhost_state_s *priv,
+                                 FAR const uint8_t *report)
+{
+  static const struct
+  {
+    uint16_t mask;
+    uint32_t code;
+    bool special;
+  } keys[] =
+  {
+    {1u << 2,  27,             false}, /* START -> Escape */
+    {1u << 3,  8,              false}, /* BACK  -> Backspace */
+    {1u << 4,  '\n',           false}, /* A     -> Enter */
+    {1u << 5,  ' ',            false}, /* B     -> Space */
+    {1u << 6,  KEYCODE_LCTRL,  true }, /* X     -> Ctrl */
+    {1u << 7,  KEYCODE_LSHIFT, true }, /* Y     -> Shift */
+    {1u << 8,  KEYCODE_UP,     true }, /* D-pad up */
+    {1u << 9,  KEYCODE_DOWN,   true }, /* D-pad down */
+    {1u << 10, KEYCODE_LEFT,   true }, /* D-pad left */
+    {1u << 11, KEYCODE_RIGHT,  true }  /* D-pad right */
+  };
+
+  uint16_t now;
+  uint16_t previous;
+  uint16_t changes;
+  unsigned int i;
+
+  if (!priv->kbd_registered)
+    {
+      printf("XBOX KBD: NOT REGISTERED\n");
+      return;
+    }
+
+  now = (uint16_t)report[4] |
+        ((uint16_t)report[5] << 8);
+
+  previous = priv->kbd_previous;
+  changes = now ^ previous;
+
+  printf("XBOX STATE: now=%04x prev=%04x changes=%04x\n",
+         (unsigned int)now,
+         (unsigned int)previous,
+         (unsigned int)changes);
+
+  priv->kbd_previous = now;
+
+  for (i = 0; i < sizeof(keys) / sizeof(keys[0]); i++)
+    {
+      if ((changes & keys[i].mask) != 0)
+        {
+          bool pressed = (now & keys[i].mask) != 0;
+
+          int event = keys[i].special ?
+                      (pressed ? KEYBOARD_SPECPRESS :
+                                 KEYBOARD_SPECREL) :
+                      (pressed ? KEYBOARD_PRESS :
+                                 KEYBOARD_RELEASE);
+
+          printf("XBOX KBD: code=%lu event=%d %s\n",
+                 (unsigned long)keys[i].code,
+                 event,
+                 pressed ? "PRESS" : "RELEASE");
+
+          keyboard_event(&priv->lower, keys[i].code, event);
+        }
+    }
+}
 
 static void usbhost_pollnotify(FAR struct usbhost_state_s *priv)
 {
@@ -575,6 +743,13 @@ static int usbhost_xboxcontroller_poll(int argc, FAR char *argv[])
   /* Loop here until the device is disconnected */
 
   uinfo("Entering poll loop\n");
+
+struct sched_param param;
+
+if (sched_getparam(0, &param) == 0)
+  {
+    printf("XBOX POLL PRIORITY: %d\n", param.sched_priority);
+  }
 
   while (!priv->disconnected)
     {
@@ -715,6 +890,10 @@ static int usbhost_xboxcontroller_poll(int argc, FAR char *argv[])
               break;
 
             case USBHOST_BUTTON_DATA:
+
+              printf("XBOX RAW: %02x %02x\n",
+              priv->tbuffer[4], priv->tbuffer[5]);
+              xbox_keyboard_report(priv, priv->tbuffer);
 
               /* Ignore the controller data if no task has opened the
                * driver.
@@ -1356,6 +1535,21 @@ static inline int usbhost_devinit(FAR struct usbhost_state_s *priv)
   uinfo("Register block driver\n");
   usbhost_mkdevname(priv, devname);
   ret = register_driver(devname, &g_xboxcontroller_fops, 0600, priv);
+  if (ret >= 0)
+    {
+      char kbdname[XBOX_KBD_NAMELEN];
+      snprintf(kbdname, sizeof(kbdname), XBOX_KBD_FORMAT,
+               priv->devchar);
+      ret = keyboard_register(&priv->lower, kbdname, XBOX_KBD_BUFSIZE);
+      if (ret >= 0)
+        {
+          priv->kbd_registered = true;
+        }
+      else
+        {
+          unregister_driver(devname);
+        }
+    }
 
   /* Check if we successfully initialized. We now have to be concerned
    * about asynchronous modification of crefs because the block
@@ -2003,7 +2197,7 @@ static int usbhost_ioctl(FAR struct file *filep, int cmd, unsigned long arg)
   };
 
   uinfo("Entered\n");
-  DEBUGASSERT(buffer);
+  //DEBUGASSERT(buffer);
   inode = filep->f_inode;
   priv  = inode->i_private;
   hport = priv->usbclass.hport;
