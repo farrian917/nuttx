@@ -637,7 +637,7 @@ static void xbox_keyboard_report(FAR struct usbhost_state_s *priv,
 
   if (!priv->kbd_registered)
     {
-      printf("XBOX KBD: NOT REGISTERED\n");
+      //printf("XBOX KBD: NOT REGISTERED\n");
       return;
     }
 
@@ -647,10 +647,10 @@ static void xbox_keyboard_report(FAR struct usbhost_state_s *priv,
   previous = priv->kbd_previous;
   changes = now ^ previous;
 
-  printf("XBOX STATE: now=%04x prev=%04x changes=%04x\n",
-         (unsigned int)now,
-         (unsigned int)previous,
-         (unsigned int)changes);
+  // printf("XBOX STATE: now=%04x prev=%04x changes=%04x\n",
+  //        (unsigned int)now,
+  //        (unsigned int)previous,
+  //        (unsigned int)changes);
 
   priv->kbd_previous = now;
 
@@ -666,10 +666,10 @@ static void xbox_keyboard_report(FAR struct usbhost_state_s *priv,
                       (pressed ? KEYBOARD_PRESS :
                                  KEYBOARD_RELEASE);
 
-          printf("XBOX KBD: code=%lu event=%d %s\n",
-                 (unsigned long)keys[i].code,
-                 event,
-                 pressed ? "PRESS" : "RELEASE");
+          // printf("XBOX KBD: code=%lu event=%d %s\n",
+          //        (unsigned long)keys[i].code,
+          //        event,
+          //        pressed ? "PRESS" : "RELEASE");
 
           keyboard_event(&priv->lower, keys[i].code, event);
         }
@@ -891,8 +891,8 @@ if (sched_getparam(0, &param) == 0)
 
             case USBHOST_BUTTON_DATA:
 
-              printf("XBOX RAW: %02x %02x\n",
-              priv->tbuffer[4], priv->tbuffer[5]);
+              // printf("XBOX RAW: %02x %02x\n",
+              //priv->tbuffer[4], priv->tbuffer[5]);
               xbox_keyboard_report(priv, priv->tbuffer);
 
               /* Ignore the controller data if no task has opened the
@@ -2137,7 +2137,7 @@ static ssize_t usbhost_read(FAR struct file *filep, FAR char *buffer,
       /* Wait for sample data */
 
       ret = usbhost_waitsample(priv, &sample);
-      ret = 0;
+      //ret = 0;
       if (ret < 0)
         {
           /* We might have been awakened by a signal */
@@ -2155,7 +2155,7 @@ static ssize_t usbhost_read(FAR struct file *filep, FAR char *buffer,
 
 errout:
   nxmutex_unlock(&priv->lock);
-  iinfo("Returning: %d\n", ret);
+  //iinfo("Returning: %d\n", ret);
   return (ssize_t)ret;
 }
 

@@ -217,5 +217,9 @@ int stm32_dma2d_l8rgb888(FAR const uint8_t *src,
                          FAR const uint32_t *clut);
 #endif
 
+int stm32_dma2d_t2gen_copy_l8x2(const void *src, void *dst,
+                                  unsigned src_stride, unsigned dst_stride,
+                                  unsigned width_bytes, unsigned height);
+
 #endif /* CONFIG_FB_OVERLAY */
 #endif /* __ARCH_ARM_SRC_STM32H7_STM32_DMA2D_H */
