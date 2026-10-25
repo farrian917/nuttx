@@ -173,6 +173,17 @@ SECTIONS
         _ebss = ABSOLUTE(.);
     } > sram
 
+    .t2_tile_cache (NOLOAD) :
+    {
+        . = ALIGN(32);
+        _st2_tile_cache = ABSOLUTE(.);
+        KEEP(*(.t2_tile_cache))
+        . = ALIGN(32);
+        _et2_tile_cache = ABSOLUTE(.);
+    } > sram1
+
+    ASSERT(SIZEOF(.t2_tile_cache) <= LENGTH(sram1), "T2 tile cache exceeds SRAM1")
+
     /* Emit the the D3 power domain section for locating BDMA data
      *
      * Static data with locate_data(".sram4") will be located
